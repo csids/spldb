@@ -14,7 +14,9 @@ Encoding: UTF-8
 LazyData: true
 Imports: data.table,
     magrittr,
-    ggplot2
+    ggplot2,
+    odbc,
+    DBI
 Suggests: testthat,
     knitr,
     rmarkdown,
