@@ -1,15 +1,14 @@
-Package: spldb
+Package: csdb
 Title: An abstracted system for easily working with databases with large datasets
 Version: 2020.5.25
 Authors@R: c(
-  person(c("Richard","Aubrey"), "White", email = "hello@rwhite.no", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6747-1726")),
-  person(given = "Folkehelseinstituttet", role = c("cph"))
+  person(c("Richard","Aubrey"), "White", email = "hello@rwhite.no", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6747-1726"))
   )
 Description: An abstracted system for easily working with databases with large datasets.
 Depends: R (>= 3.3.0)
 License: MIT + file LICENSE
-URL: https://docs.sykdomspulsen.no/spldb/, https://github.com/sykdomspulsen-org/spldb
-BugReports: https://github.com/sykdomspulsen-org/spldb/issues
+URL: https://www.csids.no/csdb/, https://github.com/csids/csdb
+BugReports: https://github.com/csids/csdb/issues
 Encoding: UTF-8
 LazyData: true
 Imports: data.table,
