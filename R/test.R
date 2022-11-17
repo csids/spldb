@@ -24,7 +24,7 @@ create_db_config <- function(
     db = db,
     trusted_connection = trusted_connection
   )
-  class(retval) <- c("spldb_db_config", class(retval))
+  class(retval) <- c("csdb_db_config", class(retval))
   return(retval)
 }
 

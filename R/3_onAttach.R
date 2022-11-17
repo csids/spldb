@@ -9,7 +9,7 @@
     )
 
   packageStartupMessage(paste0(
-    "spldb ",
+    "csdb ",
     version,
     "\n",
     "https://www.csids.no/csdb/"
