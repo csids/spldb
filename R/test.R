@@ -46,8 +46,6 @@ use_or_create_db <- function(conn, db) {
   )
 }
 
-#' @examples
-#' db_config <- 1
 create_db_connection <- function(
     db_config
 ){

@@ -4,6 +4,7 @@ msbcp <- function(){
   new("MsbcpDriver")
 }
 
+#' MsbcpDriver
 #' @importClassesFrom odbc OdbcDriver
 #' @export
 setClass("MsbcpDriver", contains = "OdbcDriver")
@@ -11,19 +12,21 @@ setClass("MsbcpDriver", contains = "OdbcDriver")
 #' @importClassesFrom odbc OdbcConnection
 setClass("Microsoft SQL Server", contains = "OdbcConnection", where = odbc:::class_cache)
 
+#' Msbcp
 #' @export
 setClass("Msbcp", contains = "OdbcConnection", slots = c(blah="list", x = "environment"))
 
-#' @inheritParams methods::show
-#' @export
-setMethod(
-  "show", "Msbcp",
-  function(object) {
-    cat("<Msbcp>\n")
-    print(object@blah)
-    callNextMethod(object)
-    # TODO: Print more details
-  })
+# #' Show
+# #' @inheritParams methods::show
+# #' @export
+# setMethod(
+#   "show", "Msbcp",
+#   function(object) {
+#     cat("<Msbcp>\n")
+#     print(object@blah)
+#     callNextMethod(object)
+#     # TODO: Print more details
+#   })
 
 
 
@@ -63,6 +66,7 @@ setMethod(
 #' @inheritParams DBI::dbConnect
 #' @param ... Additional ODBC keywords, these will be joined with the other
 #' arguments to form the final connection string.
+#' @param db The database to connect to.
 #' @export
 setMethod(
   "dbConnect", "MsbcpDriver",

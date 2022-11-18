@@ -13,6 +13,8 @@ object (in order to clone an existing connection).}
 
 \item{...}{Additional ODBC keywords, these will be joined with the other
 arguments to form the final connection string.}
+
+\item{db}{The database to connect to.}
 }
 \description{
 Connect to a ODBC compatible database
