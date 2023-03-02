@@ -1,0 +1,91 @@
+---
+title: "Introduction to spldb"
+author: "Richard White"
+date: "2020-02-17"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to spldb}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+```
+
+## Concept 
+```
+dbconnection <- csdb::DBConnection_v9$new(
+  driver = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_DRIVER"),
+  server = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_SERVER"),
+  port = as.integer(Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_PORT")),
+  db = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_DB_ANON"),
+  user = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_USER"),
+  password = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_PASSWORD"),
+  trusted_connection = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_TRUSTED_CONNECTION")
+)
+dbconnection
+
+dbconnection$connection
+dbconnection$autoconnection
+dbconnection
+
+dbconnection$disconnect()
+dbconnection$connection
+class(dbconnection$connection)
+class(dbconnection$autoconnection)
+
+dbtable <- DBTable_v9$new(
+  dbconfig = list(
+    driver = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_DRIVER"),
+    server = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_SERVER"),
+    port = as.integer(Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_PORT")),
+    db = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_DB_ANON"),
+    schema = "dbo",
+    user = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_USER"),
+    password = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_PASSWORD"),
+    trusted_connection = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_TRUSTED_CONNECTION")
+  ),
+  table_name = "anon_test",
+  field_types = c(
+      "granularity_time" = "TEXT",
+      "granularity_geo" = "TEXT",
+      "country_iso3" = "TEXT",
+      "location_code" = "TEXT",
+      "border" = "INTEGER",
+      "age" = "TEXT",
+      "sex" = "TEXT",
+      "isoyear" = "INTEGER",
+      "isoweek" = "INTEGER",
+      "isoyearweek" = "TEXT",
+      "season" = "TEXT",
+      "seasonweek" = "DOUBLE",
+      "calyear" = "INTEGER",
+      "calmonth" = "INTEGER",
+      "calyearmonth" = "TEXT",
+      "date" = "DATE",
+      "covid19_cases_testdate_n" = "INTEGER",
+      "covid19_cases_testdate_pr100000" = "DOUBLE"
+    ),
+    keys = c(
+      "granularity_time",
+      "location_code",
+      "date",
+      "age",
+      "sex"
+    ),
+    indexes = list(
+      "ind1" = c("granularity_time", "granularity_geo", "country_iso3", "location_code", "border", "age", "sex", "date", "isoyear", "isoweek", "isoyearweek")
+    ),
+    validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
+    validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+)
+dbtable$insert_data(csdb::nor_covid19_cases_by_time_location)
+dbtable$connect()
+dbtable$dbconnection$is_connected()
+dbtable$tbl()
+```

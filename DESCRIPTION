@@ -11,11 +11,16 @@ URL: https://www.csids.no/csdb/, https://github.com/csids/csdb
 BugReports: https://github.com/csids/csdb/issues
 Encoding: UTF-8
 LazyData: true
-Imports: data.table,
-    magrittr,
+Imports: csutil,
+    data.table,
+    DBI,
+    fs,
     ggplot2,
+    magrittr,
     odbc,
-    DBI
+    R6,
+    stringr,
+    uuid
 Suggests: testthat,
     knitr,
     rmarkdown,
