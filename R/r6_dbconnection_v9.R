@@ -169,7 +169,7 @@ DBConnection_v9 <- R6::R6Class(
     #' @description
     #' Disconnect from the database
     disconnect = function() {
-      suppressWarnings(DBI::dbDisconnect(private$pconnection))
+      if(self$is_connected()) suppressWarnings(DBI::dbDisconnect(private$pconnection))
     }
   ),
 

@@ -249,7 +249,7 @@ upsert_load_data_infile <- function(
   fields,
   keys,
   drop_indexes){
-  UseMethod("upsert_load_data_infile_internal")
+  UseMethod("upsert_load_data_infile")
 }
 
 upsert_load_data_infile.default <- function(
