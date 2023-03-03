@@ -114,35 +114,42 @@ DBConnection_v9 <- R6::R6Class(
       }
 
       # create connection
-      if (self$config$trusted_connection == "yes" & self$config$driver %in% c("ODBC Driver 17 for SQL Server")) {
-        private$pconnection <- DBI::dbConnect(
-          odbc::odbc(),
-          driver = self$config$driver,
-          server = self$config$server,
-          port = self$config$port,
-          trusted_connection = "yes"
-        )
-      } else if (self$config$driver %in% c("ODBC Driver 17 for SQL Server")) {
-        private$pconnection <- DBI::dbConnect(
-          odbc::odbc(),
-          driver = self$config$driver,
-          server = self$config$server,
-          port = self$config$port,
-          uid = self$config$user,
-          pwd = self$config$password,
-          encoding = "utf8"
-        )
-      } else {
-        private$pconnection <- DBI::dbConnect(
-          odbc::odbc(),
-          driver = self$config$driver,
-          server = self$config$server,
-          port = self$config$port,
-          user = self$config$user,
-          password = self$config$password,
-          encoding = "utf8"
-        )
-      }
+      tryCatch(
+        {
+          if (self$config$trusted_connection == "yes" & self$config$driver %in% c("ODBC Driver 17 for SQL Server")) {
+            private$pconnection <- DBI::dbConnect(
+              odbc::odbc(),
+              driver = self$config$driver,
+              server = self$config$server,
+              port = self$config$port,
+              trusted_connection = "yes"
+            )
+          } else if (self$config$driver %in% c("ODBC Driver 17 for SQL Server")) {
+            private$pconnection <- DBI::dbConnect(
+              odbc::odbc(),
+              driver = self$config$driver,
+              server = self$config$server,
+              port = self$config$port,
+              uid = self$config$user,
+              pwd = self$config$password,
+              encoding = "utf8"
+            )
+          } else {
+            private$pconnection <- DBI::dbConnect(
+              odbc::odbc(),
+              driver = self$config$driver,
+              server = self$config$server,
+              port = self$config$port,
+              user = self$config$user,
+              password = self$config$password,
+              encoding = "utf8"
+            )
+          }
+        },
+        error=function(cond){
+          stop("Could not connect to database server '", self$config$server,"'")
+        }
+      )
 
       # use db if available
       if(!is.null(self$config$db)){
@@ -153,12 +160,7 @@ DBConnection_v9 <- R6::R6Class(
             }))
           },
           error = function(e) {
-            a <- DBI::dbExecute(private$pconnection, glue::glue({
-              "CREATE DATABASE {self$config$db};"
-            }))
-            a <- DBI::dbExecute(private$pconnection, glue::glue({
-              "USE {self$config$db};"
-            }))
+            stop("Database '", self$config$db,"' does not exist")
           }
         )
       }
@@ -181,6 +183,9 @@ DBConnection_v9 <- R6::R6Class(
     autoconnection = function(){
       if(!self$is_connected()){
         self$connect()
+      }
+      if(!self$is_connected()){
+        stop("Error connecting to database")
       }
       return(private$pconnection)
     }

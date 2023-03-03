@@ -45,29 +45,30 @@ and manipulate structural aspects of the database table (e.g. `add_indexes`, `dr
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{DBTable_v9$new()}}
-\item \href{#method-print}{\code{DBTable_v9$print()}}
-\item \href{#method-connect}{\code{DBTable_v9$connect()}}
-\item \href{#method-disconnect}{\code{DBTable_v9$disconnect()}}
-\item \href{#method-create_table}{\code{DBTable_v9$create_table()}}
-\item \href{#method-drop_table}{\code{DBTable_v9$drop_table()}}
-\item \href{#method-insert_data}{\code{DBTable_v9$insert_data()}}
-\item \href{#method-upsert_data}{\code{DBTable_v9$upsert_data()}}
-\item \href{#method-drop_all_rows}{\code{DBTable_v9$drop_all_rows()}}
-\item \href{#method-drop_rows_where}{\code{DBTable_v9$drop_rows_where()}}
-\item \href{#method-keep_rows_where}{\code{DBTable_v9$keep_rows_where()}}
-\item \href{#method-drop_all_rows_and_then_upsert_data}{\code{DBTable_v9$drop_all_rows_and_then_upsert_data()}}
-\item \href{#method-drop_all_rows_and_then_insert_data}{\code{DBTable_v9$drop_all_rows_and_then_insert_data()}}
-\item \href{#method-tbl}{\code{DBTable_v9$tbl()}}
-\item \href{#method-print_dplyr_select}{\code{DBTable_v9$print_dplyr_select()}}
-\item \href{#method-add_indexes}{\code{DBTable_v9$add_indexes()}}
-\item \href{#method-drop_indexes}{\code{DBTable_v9$drop_indexes()}}
-\item \href{#method-clone}{\code{DBTable_v9$clone()}}
+\item \href{#method-DBTable_v9-new}{\code{DBTable_v9$new()}}
+\item \href{#method-DBTable_v9-print}{\code{DBTable_v9$print()}}
+\item \href{#method-DBTable_v9-connect}{\code{DBTable_v9$connect()}}
+\item \href{#method-DBTable_v9-disconnect}{\code{DBTable_v9$disconnect()}}
+\item \href{#method-DBTable_v9-table_exists}{\code{DBTable_v9$table_exists()}}
+\item \href{#method-DBTable_v9-create_table}{\code{DBTable_v9$create_table()}}
+\item \href{#method-DBTable_v9-remove_table}{\code{DBTable_v9$remove_table()}}
+\item \href{#method-DBTable_v9-insert_data}{\code{DBTable_v9$insert_data()}}
+\item \href{#method-DBTable_v9-upsert_data}{\code{DBTable_v9$upsert_data()}}
+\item \href{#method-DBTable_v9-drop_all_rows}{\code{DBTable_v9$drop_all_rows()}}
+\item \href{#method-DBTable_v9-drop_rows_where}{\code{DBTable_v9$drop_rows_where()}}
+\item \href{#method-DBTable_v9-keep_rows_where}{\code{DBTable_v9$keep_rows_where()}}
+\item \href{#method-DBTable_v9-drop_all_rows_and_then_upsert_data}{\code{DBTable_v9$drop_all_rows_and_then_upsert_data()}}
+\item \href{#method-DBTable_v9-drop_all_rows_and_then_insert_data}{\code{DBTable_v9$drop_all_rows_and_then_insert_data()}}
+\item \href{#method-DBTable_v9-tbl}{\code{DBTable_v9$tbl()}}
+\item \href{#method-DBTable_v9-print_dplyr_select}{\code{DBTable_v9$print_dplyr_select()}}
+\item \href{#method-DBTable_v9-add_indexes}{\code{DBTable_v9$add_indexes()}}
+\item \href{#method-DBTable_v9-drop_indexes}{\code{DBTable_v9$drop_indexes()}}
+\item \href{#method-DBTable_v9-clone}{\code{DBTable_v9$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-new"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new DBTable_v9 object.
 \subsection{Usage}{
@@ -106,8 +107,8 @@ A new `DBTable_v9` object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-print"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-print}{}}}
 \subsection{Method \code{print()}}{
 Class-specific print function.
 \subsection{Usage}{
@@ -123,8 +124,8 @@ Class-specific print function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-connect"></a>}}
-\if{latex}{\out{\hypertarget{method-connect}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-connect"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-connect}{}}}
 \subsection{Method \code{connect()}}{
 Connect from the database
 \subsection{Usage}{
@@ -133,8 +134,8 @@ Connect from the database
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-disconnect"></a>}}
-\if{latex}{\out{\hypertarget{method-disconnect}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-disconnect"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-disconnect}{}}}
 \subsection{Method \code{disconnect()}}{
 Disconnect from the database
 \subsection{Usage}{
@@ -143,8 +144,18 @@ Disconnect from the database
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-create_table"></a>}}
-\if{latex}{\out{\hypertarget{method-create_table}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-table_exists"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-table_exists}{}}}
+\subsection{Method \code{table_exists()}}{
+Does the table exist
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$table_exists()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DBTable_v9-create_table"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-create_table}{}}}
 \subsection{Method \code{create_table()}}{
 Create the database table
 \subsection{Usage}{
@@ -153,18 +164,18 @@ Create the database table
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-drop_table"></a>}}
-\if{latex}{\out{\hypertarget{method-drop_table}{}}}
-\subsection{Method \code{drop_table()}}{
+\if{html}{\out{<a id="method-DBTable_v9-remove_table"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-remove_table}{}}}
+\subsection{Method \code{remove_table()}}{
 Drop the database table
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$drop_table()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$remove_table()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-insert_data"></a>}}
-\if{latex}{\out{\hypertarget{method-insert_data}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-insert_data"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-insert_data}{}}}
 \subsection{Method \code{insert_data()}}{
 Inserts data
 \subsection{Usage}{
@@ -183,8 +194,8 @@ Inserts data into the database table}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-upsert_data"></a>}}
-\if{latex}{\out{\hypertarget{method-upsert_data}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-upsert_data"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-upsert_data}{}}}
 \subsection{Method \code{upsert_data()}}{
 Upserts data into the database table
 \subsection{Usage}{
@@ -208,8 +219,8 @@ Upserts data into the database table
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-drop_all_rows"></a>}}
-\if{latex}{\out{\hypertarget{method-drop_all_rows}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-drop_all_rows"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-drop_all_rows}{}}}
 \subsection{Method \code{drop_all_rows()}}{
 Drops all rows in the database table
 \subsection{Usage}{
@@ -218,8 +229,8 @@ Drops all rows in the database table
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-drop_rows_where"></a>}}
-\if{latex}{\out{\hypertarget{method-drop_rows_where}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-drop_rows_where"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-drop_rows_where}{}}}
 \subsection{Method \code{drop_rows_where()}}{
 Drops rows in the database table according to the SQL condition.
 \subsection{Usage}{
@@ -235,8 +246,8 @@ Drops rows in the database table according to the SQL condition.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-keep_rows_where"></a>}}
-\if{latex}{\out{\hypertarget{method-keep_rows_where}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-keep_rows_where"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-keep_rows_where}{}}}
 \subsection{Method \code{keep_rows_where()}}{
 Keeps rows in the database table according to the SQL condition.
 \subsection{Usage}{
@@ -252,8 +263,8 @@ Keeps rows in the database table according to the SQL condition.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-drop_all_rows_and_then_upsert_data"></a>}}
-\if{latex}{\out{\hypertarget{method-drop_all_rows_and_then_upsert_data}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-drop_all_rows_and_then_upsert_data"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-drop_all_rows_and_then_upsert_data}{}}}
 \subsection{Method \code{drop_all_rows_and_then_upsert_data()}}{
 Drops all rows in the database table and then upserts data.
 \subsection{Usage}{
@@ -277,8 +288,8 @@ Drops all rows in the database table and then upserts data.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-drop_all_rows_and_then_insert_data"></a>}}
-\if{latex}{\out{\hypertarget{method-drop_all_rows_and_then_insert_data}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-drop_all_rows_and_then_insert_data"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-drop_all_rows_and_then_insert_data}{}}}
 \subsection{Method \code{drop_all_rows_and_then_insert_data()}}{
 Drops all rows in the database table and then inserts data.
 \subsection{Usage}{
@@ -296,8 +307,8 @@ Drops all rows in the database table and then inserts data.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-tbl"></a>}}
-\if{latex}{\out{\hypertarget{method-tbl}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-tbl"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-tbl}{}}}
 \subsection{Method \code{tbl()}}{
 Provides access to the database table via dplyr::tbl.
 \subsection{Usage}{
@@ -306,8 +317,8 @@ Provides access to the database table via dplyr::tbl.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print_dplyr_select"></a>}}
-\if{latex}{\out{\hypertarget{method-print_dplyr_select}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-print_dplyr_select"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-print_dplyr_select}{}}}
 \subsection{Method \code{print_dplyr_select()}}{
 Prints a template dplyr::select call that you can easily copy/paste for all your variables.
 \subsection{Usage}{
@@ -316,8 +327,8 @@ Prints a template dplyr::select call that you can easily copy/paste for all your
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_indexes"></a>}}
-\if{latex}{\out{\hypertarget{method-add_indexes}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-add_indexes"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-add_indexes}{}}}
 \subsection{Method \code{add_indexes()}}{
 Adds indexes to the database table from `self$indexes`
 \subsection{Usage}{
@@ -326,8 +337,8 @@ Adds indexes to the database table from `self$indexes`
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-drop_indexes"></a>}}
-\if{latex}{\out{\hypertarget{method-drop_indexes}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-drop_indexes"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-drop_indexes}{}}}
 \subsection{Method \code{drop_indexes()}}{
 Drops all indees from the database table
 \subsection{Usage}{
@@ -336,8 +347,8 @@ Drops all indees from the database table
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-DBTable_v9-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

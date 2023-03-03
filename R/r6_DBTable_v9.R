@@ -263,9 +263,6 @@ DBTable_v9 <- R6::R6Class(
       names(self$field_types) <- naming
       # fixing indexes
       self$keys_with_length <- self$field_types_with_length[self$keys]
-
-      # create the table
-      self$create_table()
     },
 
     #' @description
@@ -298,6 +295,7 @@ DBTable_v9 <- R6::R6Class(
     #' Connect from the database
     connect = function() {
       self$dbconnection$connect()
+      private$lazy_creation_of_table()
     },
 
     #' @description
@@ -307,15 +305,21 @@ DBTable_v9 <- R6::R6Class(
     },
 
     #' @description
+    #' Does the table exist
+    table_exists = function() {
+      return(DBI::dbExistsTable(self$dbconnection$autoconnection, self$table_name))
+    },
+
+    #' @description
     #' Create the database table
     create_table = function() {
       # self$connect calls self$create_table.
       # cannot have infinite loop
       create_tab <- TRUE
-      if (DBI::dbExistsTable(self$dbconnection$autoconnection, self$table_name)) {
+      if (self$table_exists()) {
         if (!private$check_fields_match()) {
           message(glue::glue("Dropping table {self$table_name} because fields dont match"))
-          self$drop_table()
+          self$remove_table()
         } else {
           create_tab <- FALSE
         }
@@ -329,10 +333,8 @@ DBTable_v9 <- R6::R6Class(
 
     #' @description
     #' Drop the database table
-    drop_table = function() {
-      # self$connect calls self$create_table.
-      # cannot have infinite loop
-      if (DBI::dbExistsTable(self$dbconnection$autoconnection, self$table_name)) {
+    remove_table = function() {
+      if (self$table_exists()) {
         message(glue::glue("Dropping table {self$table_name}"))
         DBI::dbRemoveTable(self$dbconnection$autoconnection, self$table_name)
       }
@@ -344,7 +346,7 @@ DBTable_v9 <- R6::R6Class(
     #' @param verbose Boolean.
     #' Inserts data into the database table
     insert_data = function(newdata, verbose = TRUE) {
-      self$connect()
+      private$lazy_creation_of_table()
       if (is.null(newdata)) {
         return()
       }
@@ -376,7 +378,7 @@ DBTable_v9 <- R6::R6Class(
     #' @param drop_indexes A vector containing the indexes to be dropped before upserting (can increase performance).
     #' @param verbose Boolean.
     upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE) {
-      self$connect()
+      private$lazy_creation_of_table()
       if (is.null(newdata)) {
         return()
       }
@@ -408,6 +410,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Drops all rows in the database table
     drop_all_rows = function() {
+      private$lazy_creation_of_table()
       drop_all_rows(connection = self$dbconnection$autoconnection, self$table_name_fully_specified)
     },
 
@@ -415,6 +418,7 @@ DBTable_v9 <- R6::R6Class(
     #' Drops rows in the database table according to the SQL condition.
     #' @param condition SQL text condition.
     drop_rows_where = function(condition) {
+      private$lazy_creation_of_table()
       drop_rows_where(connection = self$dbconnection$autoconnection, self$table_name, condition)
     },
 
@@ -422,6 +426,7 @@ DBTable_v9 <- R6::R6Class(
     #' Keeps rows in the database table according to the SQL condition.
     #' @param condition SQL text condition.
     keep_rows_where = function(condition) {
+      private$lazy_creation_of_table()
       keep_rows_where(connection = self$dbconnection$autoconnection, self$table_name, condition)
       private$add_constraint()
     },
@@ -432,6 +437,7 @@ DBTable_v9 <- R6::R6Class(
     #' @param drop_indexes A vector containing the indexes to be dropped before upserting (can increase performance).
     #' @param verbose Boolean.
     drop_all_rows_and_then_upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE) {
+      private$lazy_creation_of_table()
       self$drop_all_rows()
       self$upsert_data(
         newdata = newdata,
@@ -445,6 +451,7 @@ DBTable_v9 <- R6::R6Class(
     #' @param newdata The data to insert.
     #' @param verbose Boolean.
     drop_all_rows_and_then_insert_data = function(newdata, verbose = TRUE) {
+      private$lazy_creation_of_table()
       self$drop_all_rows()
       self$insert_data(
         newdata = newdata,
@@ -455,6 +462,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Provides access to the database table via dplyr::tbl.
     tbl = function() {
+      private$lazy_creation_of_table()
       retval <- self$dbconnection$autoconnection %>%
         dplyr::tbl(self$table_name)
 
@@ -464,6 +472,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Prints a template dplyr::select call that you can easily copy/paste for all your variables.
     print_dplyr_select = function() {
+      private$lazy_creation_of_table()
       x <- self$tbl() %>%
         head() %>%
         dplyr::collect() %>%
@@ -476,6 +485,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Adds indexes to the database table from `self$indexes`
     add_indexes = function() {
+      private$lazy_creation_of_table()
       for (i in names(self$indexes)) {
         message(glue::glue("Adding index {i}"))
 
@@ -491,6 +501,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Drops all indees from the database table
     drop_indexes = function() {
+      private$lazy_creation_of_table()
       for (i in names(self$indexes)) {
         message(glue::glue("Dropping index {i}"))
         drop_index(
@@ -504,6 +515,15 @@ DBTable_v9 <- R6::R6Class(
 
   # private ----
   private = list(
+    # Lazyload the creation of the table
+    lazy_created_table = FALSE,
+    lazy_creation_of_table = function(){
+      if(!private$lazy_created_table){
+        self$create_table()
+        private$lazy_created_table <- TRUE
+      }
+    },
+
     check_fields_match = function() {
       fields <- DBI::dbListFields(self$dbconnection$autoconnection, self$table_name)
       retval <- identical(fields, names(self$field_types))

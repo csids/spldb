@@ -29,6 +29,7 @@ dbconnection <- csdb::DBConnection_v9$new(
   trusted_connection = Sys.getenv("SYKDOMSPULSEN_DB_CONFIG_TRUSTED_CONNECTION")
 )
 dbconnection
+dbconnection$connect()
 
 dbconnection$connection
 dbconnection$autoconnection

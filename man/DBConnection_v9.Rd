@@ -30,17 +30,17 @@ and manipulate structural aspects of the database table (e.g. `add_indexes`, `dr
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{DBConnection_v9$new()}}
-\item \href{#method-is_connected}{\code{DBConnection_v9$is_connected()}}
-\item \href{#method-print}{\code{DBConnection_v9$print()}}
-\item \href{#method-connect}{\code{DBConnection_v9$connect()}}
-\item \href{#method-disconnect}{\code{DBConnection_v9$disconnect()}}
-\item \href{#method-clone}{\code{DBConnection_v9$clone()}}
+\item \href{#method-DBConnection_v9-new}{\code{DBConnection_v9$new()}}
+\item \href{#method-DBConnection_v9-is_connected}{\code{DBConnection_v9$is_connected()}}
+\item \href{#method-DBConnection_v9-print}{\code{DBConnection_v9$print()}}
+\item \href{#method-DBConnection_v9-connect}{\code{DBConnection_v9$connect()}}
+\item \href{#method-DBConnection_v9-disconnect}{\code{DBConnection_v9$disconnect()}}
+\item \href{#method-DBConnection_v9-clone}{\code{DBConnection_v9$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-DBConnection_v9-new"></a>}}
+\if{latex}{\out{\hypertarget{method-DBConnection_v9-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new DBConnection_v9 object.
 \subsection{Usage}{
@@ -82,8 +82,8 @@ A new `DBConnection_v9` object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-is_connected"></a>}}
-\if{latex}{\out{\hypertarget{method-is_connected}{}}}
+\if{html}{\out{<a id="method-DBConnection_v9-is_connected"></a>}}
+\if{latex}{\out{\hypertarget{method-DBConnection_v9-is_connected}{}}}
 \subsection{Method \code{is_connected()}}{
 Is the DB schema connected?
 \subsection{Usage}{
@@ -95,8 +95,8 @@ TRUE/FALSE
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-DBConnection_v9-print"></a>}}
+\if{latex}{\out{\hypertarget{method-DBConnection_v9-print}{}}}
 \subsection{Method \code{print()}}{
 Class-specific print function.
 \subsection{Usage}{
@@ -112,8 +112,8 @@ Class-specific print function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-connect"></a>}}
-\if{latex}{\out{\hypertarget{method-connect}{}}}
+\if{html}{\out{<a id="method-DBConnection_v9-connect"></a>}}
+\if{latex}{\out{\hypertarget{method-DBConnection_v9-connect}{}}}
 \subsection{Method \code{connect()}}{
 Connect to the database
 \subsection{Usage}{
@@ -122,8 +122,8 @@ Connect to the database
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-disconnect"></a>}}
-\if{latex}{\out{\hypertarget{method-disconnect}{}}}
+\if{html}{\out{<a id="method-DBConnection_v9-disconnect"></a>}}
+\if{latex}{\out{\hypertarget{method-DBConnection_v9-disconnect}{}}}
 \subsection{Method \code{disconnect()}}{
 Disconnect from the database
 \subsection{Usage}{
@@ -132,8 +132,8 @@ Disconnect from the database
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-DBConnection_v9-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-DBConnection_v9-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
