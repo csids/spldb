@@ -108,7 +108,49 @@ DBConnection_v9 <- R6::R6Class(
 
     #' @description
     #' Connect to the database
-    connect = function() {
+    #' @param attempts Number of attempts to be made to try to connect
+    connect = function(attempts = 2) {
+      success <- FALSE
+      for(i in 1:attempts){
+        tryCatch({
+          private$connect_once()
+          success <- TRUE
+        },
+        error = function(e){
+          message("Attempt ", i,": ", e)
+        })
+        if(success) break()
+        # sleep to give the db time to recover
+        # don't need to sleep on the last failed run
+        if(i!=attempts) Sys.sleep(i)
+      }
+      if(!success) stop("Failed to connect to database after ", attempts, " attempts")
+    },
+
+    #' @description
+    #' Disconnect from the database
+    disconnect = function() {
+      if(self$is_connected()) suppressWarnings(DBI::dbDisconnect(private$pconnection))
+    }
+  ),
+
+  # active ----
+  active = list(
+    #' @field connection Database connection.
+    connection = function(){
+      private$pconnection
+    },
+    #' @field autoconnection Database connection that automatically connects if possible.
+    autoconnection = function(){
+      self$connect()
+      return(private$pconnection)
+    }
+  ),
+
+  # private ----
+  private = list(
+    pconnection = NULL,
+    connect_once = function() {
       if(self$is_connected()){
         return()
       }
@@ -165,30 +207,6 @@ DBConnection_v9 <- R6::R6Class(
         )
       }
     },
-
-    #' @description
-    #' Disconnect from the database
-    disconnect = function() {
-      if(self$is_connected()) suppressWarnings(DBI::dbDisconnect(private$pconnection))
-    }
-  ),
-
-  # active ----
-  active = list(
-    #' @field connection Database connection.
-    connection = function(){
-      private$pconnection
-    },
-    #' @field autoconnection Database connection that automatically connects if possible.
-    autoconnection = function(){
-      self$connect()
-      return(private$pconnection)
-    }
-  ),
-
-  # private ----
-  private = list(
-    pconnection = NULL,
     finalize = function() {
       # message("Closing connection automatically")
       self$disconnect()

@@ -117,9 +117,16 @@ Class-specific print function.
 \subsection{Method \code{connect()}}{
 Connect to the database
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DBConnection_v9$connect()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DBConnection_v9$connect(attempts = 2)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{attempts}}{Number of attempts to be made to try to connect}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DBConnection_v9-disconnect"></a>}}
