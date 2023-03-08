@@ -181,12 +181,7 @@ DBConnection_v9 <- R6::R6Class(
     },
     #' @field autoconnection Database connection that automatically connects if possible.
     autoconnection = function(){
-      if(!self$is_connected()){
-        self$connect()
-      }
-      if(!self$is_connected()){
-        stop("Error connecting to database")
-      }
+      self$connect()
       return(private$pconnection)
     }
   ),
