@@ -99,7 +99,7 @@ pkgdown:
 		-v "/mnt/containers/volumes/csids-hub/agent-pipelines/$(PKGNAME)/rpkg:/rpkg" \
 		-v "/mnt/containers/volumes/csids-hub/agent-pipelines/$(PKGNAME)/built:/built" \
 		-v "/mnt/containers/git/csids/drat:/drat" \
-		localhost/sc8-su-csverse:latest /bin/bash -c 'Rscript -e "devtools::install(\"/rpkg\", dependencies = TRUE, upgrade = FALSE); pkgdown::build_site(\"/rpkg\")"'
+		localhost/sc8-su-csverse:latest /bin/bash -c 'Rscript -e "devtools::install(\"/rpkg\", dependencies = TRUE, upgrade = FALSE); setwd(\"/rpkg\"); pkgdown::build_site(\"/rpkg\")"'
 
 	if [ -d "docs" ]
 	then
