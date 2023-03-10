@@ -115,8 +115,8 @@ dbtable <- csdb::DBTable_v9$new(
     indexes = list(
       "ind1" = c("granularity_time", "granularity_geo", "country_iso3", "location_code", "border", "age", "sex", "date", "isoyear", "isoweek", "isoyearweek")
     ),
-    validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
-    validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+    validator_field_types = csdb::validator_field_types_blank,
+    validator_field_contents = csdb::validator_field_contents_blank
 )
 dbtable$insert_data(csdb::nor_covid19_cases_by_time_location)
 dbtable$connect()
@@ -125,20 +125,20 @@ dbtable$dbconnection$is_connected()
 dbtable$tbl()
 #> # Source:   table<anon_test> [?? x 18]
 #> # Database: Microsoft SQL Server 15.00.4236[dbo@8f6800aff6b4/sc_interactive_anon]
-#>    granul…¹ granu…² count…³ locat…⁴ border age   sex   isoyear isoweek isoye…⁵ season seaso…⁶
-#>    <chr>    <chr>   <chr>   <chr>    <int> <chr> <chr>   <int>   <int> <chr>   <chr>    <dbl>
-#>  1 day      county  nor     county…   2020 total total    2020       8 2020-08 2019/…      31
-#>  2 day      county  nor     county…   2020 total total    2020       8 2020-08 2019/…      31
-#>  3 day      county  nor     county…   2020 total total    2020       8 2020-08 2019/…      31
-#>  4 day      county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32
-#>  5 day      county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32
-#>  6 day      county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32
-#>  7 day      county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32
-#>  8 day      county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32
-#>  9 day      county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32
-#> 10 day      county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32
-#> # … with more rows, 6 more variables: calyear <int>, calmonth <int>, calyearmonth <chr>,
-#> #   date <date>, covid19_cases_testdate_n <int>, covid19_cases_testdate_pr100000 <dbl>, and
-#> #   abbreviated variable names ¹​granularity_time, ²​granularity_geo, ³​country_iso3,
-#> #   ⁴​location_code, ⁵​isoyearweek, ⁶​seasonweek
+#>    granula…¹ granu…² count…³ locat…⁴ border age   sex   isoyear isoweek isoye…⁵ season seaso…⁶ calyear
+#>    <chr>     <chr>   <chr>   <chr>    <int> <chr> <chr>   <int>   <int> <chr>   <chr>    <dbl>   <int>
+#>  1 day       county  nor     county…   2020 total total    2020       8 2020-08 2019/…      31    2020
+#>  2 day       county  nor     county…   2020 total total    2020       8 2020-08 2019/…      31    2020
+#>  3 day       county  nor     county…   2020 total total    2020       8 2020-08 2019/…      31    2020
+#>  4 day       county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32    2020
+#>  5 day       county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32    2020
+#>  6 day       county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32    2020
+#>  7 day       county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32    2020
+#>  8 day       county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32    2020
+#>  9 day       county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32    2020
+#> 10 day       county  nor     county…   2020 total total    2020       9 2020-09 2019/…      32    2020
+#> # … with more rows, 5 more variables: calmonth <int>, calyearmonth <chr>, date <date>,
+#> #   covid19_cases_testdate_n <int>, covid19_cases_testdate_pr100000 <dbl>, and abbreviated variable
+#> #   names ¹​granularity_time, ²​granularity_geo, ³​country_iso3, ⁴​location_code, ⁵​isoyearweek,
+#> #   ⁶​seasonweek
 ```

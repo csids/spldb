@@ -86,8 +86,8 @@ dbtable <- csdb::DBTable_v9$new(
     indexes = list(
       "ind1" = c("granularity_time", "granularity_geo", "country_iso3", "location_code", "border", "age", "sex", "date", "isoyear", "isoweek", "isoyearweek")
     ),
-    validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
-    validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+    validator_field_types = csdb::validator_field_types_blank,
+    validator_field_contents = csdb::validator_field_contents_blank
 )
 dbtable$insert_data(csdb::nor_covid19_cases_by_time_location)
 dbtable$connect()
