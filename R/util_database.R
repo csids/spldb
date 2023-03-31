@@ -520,13 +520,13 @@ drop_rows_where <- function(connection, table, condition) {
     "SELECT COUNT(*) FROM {table} WHERE {condition};"
   )) %>%
     as.numeric()
-  message(numrows, " rows remaining to be deleted")
+  # message(numrows, " rows remaining to be deleted")
 
   num_deleting <- 100000
   # need to do this, so that we dont get scientific format in the SQL command
   num_deleting_character <- formatC(num_deleting, format = "f", drop0trailing = T)
   num_delete_calls <- ceiling(numrows / num_deleting)
-  message("We will need to perform ", num_delete_calls, " delete calls of ", num_deleting_character, " rows each.")
+  # message("We will need to perform ", num_delete_calls, " delete calls of ", num_deleting_character, " rows each.")
 
   indexes <- csutil::easy_split(1:num_delete_calls, number_of_groups = 10)
   notify_indexes <- unlist(lapply(indexes, max))
@@ -552,7 +552,7 @@ drop_rows_where <- function(connection, table, condition) {
     )) %>%
       as.numeric()
     i <- i + 1
-    if (i %in% notify_indexes) message(i, "/", num_delete_calls, " delete calls performed. ", numrows, " rows remaining to be deleted")
+    # if (i %in% notify_indexes) message(i, "/", num_delete_calls, " delete calls performed. ", numrows, " rows remaining to be deleted")
   }
 
   t1 <- Sys.time()
