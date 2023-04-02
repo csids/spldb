@@ -328,6 +328,7 @@ DBTable_v9 <- R6::R6Class(
         message(glue::glue("Creating table {self$table_name}"))
         create_table(self$dbconnection$autoconnection, self$table_name_fully_specified, self$field_types, self$keys)
         private$add_constraint()
+        self$add_indexes()
       }
     },
 

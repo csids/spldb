@@ -1,4 +1,8 @@
-# Version 2023.03.31
+# Version 2023.4.2
+
+- `create_table` now automatically adds the indexes
+
+# Version 2023.3.31
 
 - Removing info messages from `drop_rows_where`
 
