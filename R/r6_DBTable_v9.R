@@ -511,6 +511,29 @@ DBTable_v9 <- R6::R6Class(
           index = i
         )
       }
+    },
+
+    #' @description
+    #' Confirms that the names and number of indexes in the database are the same as in the R code.
+    #' Does not confirm the contents of the indexes!
+    confirm_indexes = function() {
+      indexes_db <- get_indexes(
+        connection = self$dbconnection$autoconnection,
+        table = self$table_name
+      )
+      indexes_self <- names(self$indexes)
+      if(!identical(indexes_db, indexes_self)){
+        self$drop_indexes()
+        self$add_indexes()
+      }
+    },
+
+    #' @description
+    #' Gets the number of rows in the database table
+    nrow = function(){
+      retval <- get_table_names_and_nrow(self$dbconnection$autoconnect)
+      retval <- retval[table_name %in% self$table_name]$n
+      return(retval)
     }
   ),
 

@@ -452,6 +452,20 @@ drop_constraint.default <- function(connection, table) {
   try(a <- DBI::dbExecute(connection, sql), TRUE)
 }
 
+get_indexes <- function(connection, table) UseMethod("get_indexes")
+
+`get_indexes.Microsoft SQL Server` <- function(connection, table){
+  index_name <- NULL
+  table_name <- NULL
+
+  table_rows <- connection %>%
+    DBI::dbGetQuery("select o.name as table_name, i.name as index_name from sys.objects o join sys.sysindexes i on o.object_id = i.id where o.is_ms_shipped = 0 and i.rowcnt > 0 order by o.name") %>%
+    dplyr::filter(!is.na(index_name) & !stringr::str_detect(index_name, "^PK")) %>%
+    setDT()
+  retval <- table_rows[table_name %in% table]$index_name
+  return(retval)
+}
+
 drop_index <- function(connection, table, index) UseMethod("drop_index")
 
 drop_index.default <- function(connection, table, index) {

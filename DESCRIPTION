@@ -14,6 +14,7 @@ LazyData: true
 Imports: csutil,
     data.table,
     DBI,
+    dplyr,
     fs,
     ggplot2,
     magrittr,

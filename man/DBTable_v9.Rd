@@ -63,6 +63,8 @@ and manipulate structural aspects of the database table (e.g. `add_indexes`, `dr
 \item \href{#method-DBTable_v9-print_dplyr_select}{\code{DBTable_v9$print_dplyr_select()}}
 \item \href{#method-DBTable_v9-add_indexes}{\code{DBTable_v9$add_indexes()}}
 \item \href{#method-DBTable_v9-drop_indexes}{\code{DBTable_v9$drop_indexes()}}
+\item \href{#method-DBTable_v9-confirm_indexes}{\code{DBTable_v9$confirm_indexes()}}
+\item \href{#method-DBTable_v9-nrow}{\code{DBTable_v9$nrow()}}
 \item \href{#method-DBTable_v9-clone}{\code{DBTable_v9$clone()}}
 }
 }
@@ -343,6 +345,27 @@ Adds indexes to the database table from `self$indexes`
 Drops all indees from the database table
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$drop_indexes()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DBTable_v9-confirm_indexes"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-confirm_indexes}{}}}
+\subsection{Method \code{confirm_indexes()}}{
+Confirms that the names and number of indexes in the database are the same as in the R code.
+Does not confirm the contents of the indexes!
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$confirm_indexes()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DBTable_v9-nrow"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-nrow}{}}}
+\subsection{Method \code{nrow()}}{
+Gets the number of rows in the database table
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$nrow()}\if{html}{\out{</div>}}
 }
 
 }
