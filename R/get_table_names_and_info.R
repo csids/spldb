@@ -1,7 +1,7 @@
 #' Get table names, number of rows, and size of data
 #' @param connection db connection
 #' @export
-get_table_names_and_info.Microsoft <- function(connection) UseMethod("get_nrow")
+get_table_names_and_info.Microsoft <- function(connection) UseMethod("get_table_names_and_info")
 
 #' @export
 `get_table_names_and_info.Microsoft SQL Server` <- function(connection) {
