@@ -174,8 +174,6 @@ DBTable_v9 <- R6::R6Class(
     indexes = NULL,
     #' @field validator_field_contents A function that validates the data before it is inserted into the database.
     validator_field_contents = NULL,
-    #' @field info Free text information about the DB schema.
-    info = "No information given in schema definition",
     #' @field load_folder A temporary folder that is used to write data to before inserting into the database.
     load_folder = tempdir(check = T),
     #' @field censors A named list of censors.
@@ -532,7 +530,16 @@ DBTable_v9 <- R6::R6Class(
     #' Gets the number of rows in the database table
     nrow = function(){
       retval <- get_table_names_and_nrow(self$dbconnection$autoconnect)
-      retval <- retval[table_name %in% self$table_name]$n
+      retval <- retval[table_name %in% self$table_name]$nrow
+      return(retval)
+    },
+
+    #' @description
+    #' Gets the information about the database table
+    info = function(){
+      retval <- get_table_names_and_nrow(self$dbconnection$autoconnect)
+      retval <- retval[table_name %in% self$table_name]
+      data.table::shouldPrint(retval)
       return(retval)
     }
   ),

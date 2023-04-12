@@ -34,8 +34,6 @@ and manipulate structural aspects of the database table (e.g. `add_indexes`, `dr
 
 \item{\code{validator_field_contents}}{A function that validates the data before it is inserted into the database.}
 
-\item{\code{info}}{Free text information about the DB schema.}
-
 \item{\code{load_folder}}{A temporary folder that is used to write data to before inserting into the database.}
 
 \item{\code{censors}}{A named list of censors.}
@@ -65,6 +63,7 @@ and manipulate structural aspects of the database table (e.g. `add_indexes`, `dr
 \item \href{#method-DBTable_v9-drop_indexes}{\code{DBTable_v9$drop_indexes()}}
 \item \href{#method-DBTable_v9-confirm_indexes}{\code{DBTable_v9$confirm_indexes()}}
 \item \href{#method-DBTable_v9-nrow}{\code{DBTable_v9$nrow()}}
+\item \href{#method-DBTable_v9-info}{\code{DBTable_v9$info()}}
 \item \href{#method-DBTable_v9-clone}{\code{DBTable_v9$clone()}}
 }
 }
@@ -366,6 +365,16 @@ Does not confirm the contents of the indexes!
 Gets the number of rows in the database table
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$nrow()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DBTable_v9-info"></a>}}
+\if{latex}{\out{\hypertarget{method-DBTable_v9-info}{}}}
+\subsection{Method \code{info()}}{
+Gets the information about the database table
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$info()}\if{html}{\out{</div>}}
 }
 
 }
