@@ -1,3 +1,7 @@
+# Version 2023.4.14
+
+- `get_table_names_and_info` is now ordered according to `table_name`.
+
 # Version 2023.4.12
 
 - `get_table_names_and_nrow` is now changed to `get_table_names_and_info` and also includes size_total_gb, size_data_gb, size_index_gb.

@@ -23,6 +23,7 @@ get_table_names_and_info <- function(connection) UseMethod("get_table_names_and_
     size_data_gb,
     size_index_gb
   )]
+  setorder(table_rows, table_name)
 
   data.table::shouldPrint(table_rows)
   return(table_rows)
