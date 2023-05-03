@@ -1,3 +1,12 @@
+# Version 2023.4.14
+
+- `get_table_names_and_info` is now ordered according to `table_name`.
+
+# Version 2023.4.12
+
+- `get_table_names_and_nrow` is now changed to `get_table_names_and_info` and also includes size_total_gb, size_data_gb, size_index_gb.
+- `info` is now included as a method for `DBTable_v9` 
+
 # Version 2023.4.4
 
 - `confirm_indexes` is now added to `DBTable_v9`, which confirms that the names and number of indexes in the database are the same as in the R code. It does not confirm the contents of the indexes!
