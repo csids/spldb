@@ -59,18 +59,11 @@ validator_field_contents_csfmt_rts_data_v1 <- function(data) {
     if (sum(stringr::str_detect(
       i,
       c(
-        "total",
+        "date",
         "isoyear",
-        "calyear",
-        "year",
-        "season",
-        "month",
-        "isoweek",
-        "week",
-        "day",
-        "hour",
-        "minute",
-        "^event"
+        "isoyearweek",
+        "^event",
+        "total"
       )
     )) == 0) {
       retval <- FALSE
