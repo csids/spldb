@@ -102,7 +102,8 @@ validator_field_contents_csfmt_rts_data_v1 <- function(data) {
   }
 
   if (sum(!unique(data$border) %in% c(
-    "2020"
+    "2020",
+    "2024"
   )) > 0) {
     retval <- FALSE
     attr(retval, "var") <- "border"
