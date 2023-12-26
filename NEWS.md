@@ -1,3 +1,7 @@
+# Version 2023.12.26
+
+- Including georegion in validator_field_contents_csfmt_rts_data_v1.
+
 # Version 2023.4.14
 
 - `get_table_names_and_info` is now ordered according to `table_name`.

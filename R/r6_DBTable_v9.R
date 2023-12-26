@@ -89,6 +89,7 @@ validator_field_contents_csfmt_rts_data_v1 <- function(data) {
     "missingwardstavanger",
     "ward",
     "station",
+    "georegion",
     "baregion",
     "missingcounty",
     "missingmunicip",
