@@ -24,26 +24,26 @@ validator_field_types_csfmt_rts_data_v1 <- function(db_field_types) {
     return(FALSE)
   }
   if (!identical(
-      db_field_types[1:16],
-      c(
-        "granularity_time" = "TEXT",
-        "granularity_geo" = "TEXT",
-        "country_iso3" = "TEXT",
-        "location_code" = "TEXT",
-        "border" = "INTEGER",
-        "age" = "TEXT",
-        "sex" = "TEXT",
-        "isoyear" = "INTEGER",
-        "isoweek" = "INTEGER",
-        "isoyearweek" = "TEXT",
-        "season" = "TEXT",
-        "seasonweek" = "DOUBLE",
-        "calyear" = "INTEGER",
-        "calmonth" = "INTEGER",
-        "calyearmonth" = "TEXT",
-        "date" = "DATE"
-      )
-    )) {
+    db_field_types[1:16],
+    c(
+      "granularity_time" = "TEXT",
+      "granularity_geo" = "TEXT",
+      "country_iso3" = "TEXT",
+      "location_code" = "TEXT",
+      "border" = "INTEGER",
+      "age" = "TEXT",
+      "sex" = "TEXT",
+      "isoyear" = "INTEGER",
+      "isoweek" = "INTEGER",
+      "isoyearweek" = "TEXT",
+      "season" = "TEXT",
+      "seasonweek" = "DOUBLE",
+      "calyear" = "INTEGER",
+      "calmonth" = "INTEGER",
+      "calyearmonth" = "TEXT",
+      "date" = "DATE"
+    )
+  )) {
     return(FALSE)
   }
 
@@ -90,6 +90,126 @@ validator_field_contents_csfmt_rts_data_v1 <- function(data) {
     "ward",
     "station",
     "georegion",
+    "baregion",
+    "missingcounty",
+    "missingmunicip",
+    "notmainlandcounty",
+    "notmainlandmunicip",
+    "lab"
+  )) > 0) {
+    retval <- FALSE
+    attr(retval, "var") <- "granularity_geo"
+    return(retval)
+  }
+
+  if (sum(!unique(data$border) %in% c(
+    "2020",
+    "2024"
+  )) > 0) {
+    retval <- FALSE
+    attr(retval, "var") <- "border"
+    return(retval)
+  }
+
+  if (sum(!unique(data$sex) %in% c(
+    "male",
+    "female",
+    "total"
+  )) > 0) {
+    retval <- FALSE
+    attr(retval, "var") <- "sex"
+    return(retval)
+  }
+
+  if (!inherits(data$date, "Date")) {
+    retval <- FALSE
+    attr(retval, "var") <- "date"
+    return(retval)
+  }
+
+  return(TRUE)
+}
+
+#' validator_field_types_csfmt_rts_data_v2
+#' An example (schema) validator of field_types used in csfmt_rts_data_v2
+#' @param db_field_types db_field_types passed to schema
+#' @export
+validator_field_types_csfmt_rts_data_v2 <- function(db_field_types) {
+  if (!inherits(db_field_types, "character")) {
+    return(FALSE)
+  }
+  if (!length(db_field_types) >= 18) {
+    return(FALSE)
+  }
+  if (!identical(
+    db_field_types[1:18],
+    c(
+      "granularity_time" = "TEXT",
+      "granularity_geo" = "TEXT",
+      "country_iso3" = "TEXT",
+      "location_code" = "TEXT",
+      "border" = "INTEGER",
+      "age" = "TEXT",
+      "sex" = "TEXT",
+      "isoyear" = "INTEGER",
+      "isoweek" = "INTEGER",
+      "isoyearweek" = "TEXT",
+      "isoquarter" = "INTEGER",
+      "isoyearquarter" = "TEXT",
+      "season" = "TEXT",
+      "seasonweek" = "DOUBLE",
+      "calyear" = "INTEGER",
+      "calmonth" = "INTEGER",
+      "calyearmonth" = "TEXT",
+      "date" = "DATE"
+    )
+  )) {
+    return(FALSE)
+  }
+
+  return(TRUE)
+}
+
+#' validator_field_contents_csfmt_rts_data_v2
+#' An example (schema) validator of database data used in csfmt_rts_data_v2
+#' @param data data passed to schema
+#' @export
+validator_field_contents_csfmt_rts_data_v2 <- function(data) {
+  for (i in unique(data$granularity_time)) {
+    if (sum(stringr::str_detect(
+      i,
+      c(
+        "date",
+        "isoyear",
+        "isoyearweek",
+        "isoyearquarter",
+        "^event",
+        "total"
+      )
+    )) == 0) {
+      retval <- FALSE
+      attr(retval, "var") <- "granularity_time"
+      return(retval)
+    }
+  }
+
+  if (sum(!unique(data$granularity_geo) %in% c(
+    "nation",
+    "georegion",
+    "hospitaldistrict",
+    "county",
+    "municip",
+    "wardoslo",
+    "extrawardoslo",
+    "wardbergen",
+    "wardtrondheim",
+    "wardstavanger",
+    "missingwardoslo",
+    "missingwardbergen",
+    "missingwardtrondheim",
+    "missingwardstavanger",
+    "ward",
+    "station",
     "baregion",
     "missingcounty",
     "missingmunicip",

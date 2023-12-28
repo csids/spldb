@@ -1,3 +1,7 @@
+# Version 2023.12.28
+
+- Including validator_field_types_csfmt_rts_data_v2 and validator_field_contents_csfmt_rts_data_v2.
+
 # Version 2023.12.26
 
 - Including georegion in validator_field_contents_csfmt_rts_data_v1.
