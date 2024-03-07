@@ -490,7 +490,7 @@ DBTable_v9 <- R6::R6Class(
       )
 
       nrow_after <- self$nrow()
-      if(nrow_after != nrow(desired)){
+      if(nrow_after != nrow_desired){
         message("Started with ", nrow_before, " rows. Wanted to end up with ", nrow_desired, ", but only have ", nrow_after, ". Now trying upsert.")
 
         self$upsert_data(
@@ -499,7 +499,7 @@ DBTable_v9 <- R6::R6Class(
           verbose = verbose
         )
         nrow_after <- self$nrow()
-        if(nrow_after != nrow(desired)){
+        if(nrow_after != nrow_desired){
           stop("Upsert failed.")
         }
       }
