@@ -457,10 +457,10 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Inserts data
     #' @param newdata The data to insert.
-    #' @param verbose Boolean.
     #' @param confirm_insert_via_nrow Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.
+    #' @param verbose Boolean.
     #' Inserts data into the database table
-    insert_data = function(newdata, verbose = TRUE, confirm_insert_via_nrow = FALSE) {
+    insert_data = function(newdata, confirm_insert_via_nrow = FALSE, verbose = TRUE) {
       private$lazy_creation_of_table()
       if (is.null(newdata)) {
         return()
@@ -582,12 +582,14 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Drops all rows in the database table and then inserts data.
     #' @param newdata The data to insert.
+    #' @param confirm_insert_via_nrow Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.
     #' @param verbose Boolean.
-    drop_all_rows_and_then_insert_data = function(newdata, verbose = TRUE) {
+    drop_all_rows_and_then_insert_data = function(newdata, confirm_insert_via_nrow = FALSE, verbose = TRUE) {
       private$lazy_creation_of_table()
       self$drop_all_rows()
       self$insert_data(
         newdata = newdata,
+        confirm_insert_via_nrow = confirm_insert_via_nrow,
         verbose = verbose
       )
     },

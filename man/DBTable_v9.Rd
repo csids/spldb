@@ -182,8 +182,8 @@ Inserts data
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$insert_data(
   newdata,
-  verbose = TRUE,
-  confirm_insert_via_nrow = FALSE
+  confirm_insert_via_nrow = FALSE,
+  verbose = TRUE
 )}\if{html}{\out{</div>}}
 }
 
@@ -192,9 +192,9 @@ Inserts data
 \describe{
 \item{\code{newdata}}{The data to insert.}
 
-\item{\code{verbose}}{Boolean.}
+\item{\code{confirm_insert_via_nrow}}{Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.}
 
-\item{\code{confirm_insert_via_nrow}}{Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.
+\item{\code{verbose}}{Boolean.
 Inserts data into the database table}
 }
 \if{html}{\out{</div>}}
@@ -300,13 +300,19 @@ Drops all rows in the database table and then upserts data.
 \subsection{Method \code{drop_all_rows_and_then_insert_data()}}{
 Drops all rows in the database table and then inserts data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$drop_all_rows_and_then_insert_data(newdata, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$drop_all_rows_and_then_insert_data(
+  newdata,
+  confirm_insert_via_nrow = FALSE,
+  verbose = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{newdata}}{The data to insert.}
+
+\item{\code{confirm_insert_via_nrow}}{Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.}
 
 \item{\code{verbose}}{Boolean.}
 }
