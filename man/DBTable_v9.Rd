@@ -180,7 +180,11 @@ Drop the database table
 \subsection{Method \code{insert_data()}}{
 Inserts data
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$insert_data(newdata, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$insert_data(
+  newdata,
+  verbose = TRUE,
+  confirm_insert_via_nrow = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -188,7 +192,9 @@ Inserts data
 \describe{
 \item{\code{newdata}}{The data to insert.}
 
-\item{\code{verbose}}{Boolean.
+\item{\code{verbose}}{Boolean.}
+
+\item{\code{confirm_insert_via_nrow}}{Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.
 Inserts data into the database table}
 }
 \if{html}{\out{</div>}}

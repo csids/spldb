@@ -458,8 +458,9 @@ DBTable_v9 <- R6::R6Class(
     #' Inserts data
     #' @param newdata The data to insert.
     #' @param verbose Boolean.
+    #' @param confirm_insert_via_nrow Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.
     #' Inserts data into the database table
-    insert_data = function(newdata, verbose = TRUE) {
+    insert_data = function(newdata, verbose = TRUE, confirm_insert_via_nrow = FALSE) {
       private$lazy_creation_of_table()
       if (is.null(newdata)) {
         return()
@@ -467,6 +468,9 @@ DBTable_v9 <- R6::R6Class(
       if (nrow(newdata) == 0) {
         return()
       }
+
+      nrow_before <- self$nrow()
+      nrow_desired <- nrow_before + nrow(newdata)
 
       #newdata <- private$make_censored_data(newdata)
 
@@ -484,6 +488,21 @@ DBTable_v9 <- R6::R6Class(
         dt = newdata,
         file = infile
       )
+
+      nrow_after <- self$nrow()
+      if(nrow_after != nrow(desired)){
+        message("Started with ", nrow_before, " rows. Wanted to end up with ", nrow_desired, ", but only have ", nrow_after, ". Now trying upsert.")
+
+        self$upsert_data(
+          newdata = newdata,
+          drop_indexes = NULL,
+          verbose = verbose
+        )
+        nrow_after <- self$nrow()
+        if(nrow_after != nrow(desired)){
+          stop("Upsert failed.")
+        }
+      }
     },
 
     #' @description
