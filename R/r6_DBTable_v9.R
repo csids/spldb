@@ -665,7 +665,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Gets the number of rows in the database table
     nrow = function(){
-      retval <- get_table_names_and_info(self$dbconnection$autoconnect)
+      retval <- get_table_names_and_info(self$dbconnection$autoconnection)
       retval <- retval[table_name %in% self$table_name]$nrow
       return(retval)
     },
@@ -673,7 +673,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Gets the information about the database table
     info = function(){
-      retval <- get_table_names_and_info(self$dbconnection$autoconnect)
+      retval <- get_table_names_and_info(self$dbconnection$autoconnection)
       retval <- retval[table_name %in% self$table_name]
       data.table::shouldPrint(retval)
       return(retval)
