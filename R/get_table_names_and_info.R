@@ -10,7 +10,7 @@ get_table_names_and_info <- function(connection) UseMethod("get_table_names_and_
   #   setDT() %>% unique()
 
   # update stats
-  connection %>% DBI::dbExecute("sp_updatestats")
+  # connection %>% DBI::dbExecute("sp_updatestats")
   # get the stats
   table_rows <- connection %>%
     DBI::dbGetQuery("sp_msforeachtable 'sp_spaceused [?]'") %>%
