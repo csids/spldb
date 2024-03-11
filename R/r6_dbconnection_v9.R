@@ -176,6 +176,16 @@ DBConnection_v9 <- R6::R6Class(
               pwd = self$config$password,
               encoding = "utf8"
             )
+          } else if (self$config$driver %in% c("PostgreSQL Unicode")) {
+            private$pconnection <- DBI::dbConnect(
+              odbc::odbc(),
+              driver = self$config$driver,
+              server = self$config$server,
+              port = self$config$port,
+              uid = self$config$user,
+              password = self$config$password,
+              encoding = "utf8"
+            )
           } else {
             private$pconnection <- DBI::dbConnect(
               odbc::odbc(),
