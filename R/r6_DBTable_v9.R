@@ -470,6 +470,7 @@ DBTable_v9 <- R6::R6Class(
       }
 
       if(confirm_insert_via_nrow){
+        Sys.sleep(1)
         nrow_before <- self$nrow(use_count = TRUE)
         nrow_desired <- nrow_before + nrow(newdata)
       }
