@@ -470,8 +470,6 @@ DBTable_v9 <- R6::R6Class(
       }
 
       if(confirm_insert_via_nrow){
-        Sys.sleep(1)
-        nrow_before <- self$nrow(use_count = TRUE)
         nrow_desired <- nrow_before + nrow(newdata)
       }
 
@@ -494,8 +492,8 @@ DBTable_v9 <- R6::R6Class(
 
       if(confirm_insert_via_nrow){
         nrow_after <- self$nrow(use_count = TRUE)
-        if(nrow_after != nrow_desired){
-          message("Started with ", nrow_before, " rows. Wanted to end up with ", nrow_desired, ", but only have ", nrow_after, ". Now trying upsert.")
+        if(nrow_after < nrow(new_data)){
+          message("After insert have ", nrow_after, " rows. Tried to insert ", nrow(new_data), ". Now trying upsert.")
 
           self$upsert_data(
             newdata = newdata,
@@ -503,9 +501,9 @@ DBTable_v9 <- R6::R6Class(
             verbose = verbose
           )
           nrow_after <- self$nrow(use_count = TRUE)
-          if(nrow_after != nrow_desired){
-            message("Upset failed.")
-            stop("Upsert failed. Started with ", nrow_before, " rows. Wanted to end up with ", nrow_desired, ", but only have ", nrow_after, ".")
+          if(nrow_after < nrow(new_data)){
+            message("After Upsert have ", nrow_after, " rows. Tried to insert ", nrow(new_data), ".")
+            stop("Upsert failed")
           }
         }
       }
@@ -551,6 +549,7 @@ DBTable_v9 <- R6::R6Class(
     drop_all_rows = function() {
       private$lazy_creation_of_table()
       drop_all_rows(connection = self$dbconnection$autoconnection, self$table_name_fully_specified)
+
     },
 
     #' @description
@@ -558,7 +557,16 @@ DBTable_v9 <- R6::R6Class(
     #' @param condition SQL text condition.
     drop_rows_where = function(condition) {
       private$lazy_creation_of_table()
-      drop_rows_where(connection = self$dbconnection$autoconnection, self$table_name, condition)
+
+      # check that it's deleted afterwards!
+      attempts <- 0
+      while(attempts <= 2){
+        drop_rows_where(connection = self$dbconnection$autoconnection, self$table_name, condition)
+
+        if(self$nrow(use_count = TRUE) == 0) break()
+        attempts <- attempts + 1
+        Sys.sleep(1)
+      }
     },
 
     #' @description
