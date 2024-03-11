@@ -376,9 +376,16 @@ Does not confirm the contents of the indexes!
 \subsection{Method \code{nrow()}}{
 Gets the number of rows in the database table
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$nrow()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DBTable_v9$nrow(use_count = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{use_count}}{If true, then uses the count command, which is slow but accurate. If false, then uses summary statistics, which is fast but inaccurate.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DBTable_v9-info"></a>}}

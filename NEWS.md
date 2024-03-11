@@ -1,3 +1,7 @@
+# Version 2024.3.11
+
+- Including use_count as an argument in nrow in DBTable_v9, which is slower but more accurate.
+
 # Version 2024.3.7
 
 - Including confirm_insert_via_nrow in DBTable_v9. Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.

@@ -470,7 +470,7 @@ DBTable_v9 <- R6::R6Class(
       }
 
       if(confirm_insert_via_nrow){
-        nrow_before <- self$nrow()
+        nrow_before <- self$nrow(use_count = TRUE)
         nrow_desired <- nrow_before + nrow(newdata)
       }
 
@@ -492,12 +492,7 @@ DBTable_v9 <- R6::R6Class(
       )
 
       if(confirm_insert_via_nrow){
-        Sys.sleep(1)
-        nrow_after <- self$nrow()
-        if(nrow_after != nrow_desired){
-          Sys.sleep(10)
-          nrow_after <- self$nrow()
-        }
+        nrow_after <- self$nrow(use_count = TRUE)
         if(nrow_after != nrow_desired){
           message("Started with ", nrow_before, " rows. Wanted to end up with ", nrow_desired, ", but only have ", nrow_after, ". Now trying upsert.")
 
@@ -506,12 +501,7 @@ DBTable_v9 <- R6::R6Class(
             drop_indexes = NULL,
             verbose = verbose
           )
-          Sys.sleep(1)
-          nrow_after <- self$nrow()
-          if(nrow_after != nrow_desired){
-            Sys.sleep(10)
-            nrow_after <- self$nrow()
-          }
+          nrow_after <- self$nrow(use_count = TRUE)
           if(nrow_after != nrow_desired){
             stop("Upsert failed. Started with ", nrow_before, " rows. Wanted to end up with ", nrow_desired, ", but only have ", nrow_after, ".")
           }
@@ -678,9 +668,17 @@ DBTable_v9 <- R6::R6Class(
 
     #' @description
     #' Gets the number of rows in the database table
-    nrow = function(){
-      retval <- get_table_names_and_info(self$dbconnection$autoconnection)
-      retval <- retval[table_name %in% self$table_name]$nrow
+    #' @param use_count If true, then uses the count command, which is slow but accurate. If false, then uses summary statistics, which is fast but inaccurate.
+    nrow = function(use_count = FALSE){
+      if(use_count){
+        retval <- self$tbl() |>
+          dplyr::summarize(n=n()) |>
+          dplyr::collect()
+        retval <- retval$n
+      } else {
+        retval <- get_table_names_and_info(self$dbconnection$autoconnection)
+        retval <- retval[table_name %in% self$table_name]$nrow
+      }
       return(retval)
     },
 
