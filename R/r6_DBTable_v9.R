@@ -502,7 +502,7 @@ DBTable_v9 <- R6::R6Class(
           )
           nrow_after <- self$nrow(use_count = TRUE)
           if(nrow_after < nrow(new_data)){
-            message("After Upsert have ", nrow_after, " rows. Tried to insert ", nrow(new_data), ".")
+            message("After upsert have ", nrow_after, " rows. Tried to upsert ", nrow(new_data), ".")
             stop("Upsert failed")
           }
         }
