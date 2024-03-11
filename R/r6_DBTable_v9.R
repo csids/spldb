@@ -469,10 +469,6 @@ DBTable_v9 <- R6::R6Class(
         return()
       }
 
-      if(confirm_insert_via_nrow){
-        nrow_desired <- nrow_before + nrow(newdata)
-      }
-
       #newdata <- private$make_censored_data(newdata)
 
       validated <- self$validator_field_contents(newdata)
