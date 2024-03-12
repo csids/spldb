@@ -184,6 +184,7 @@ DBConnection_v9 <- R6::R6Class(
               port = self$config$port,
               uid = self$config$user,
               password = self$config$password,
+              database = self$config$db,
               encoding = "utf8"
             )
           } else {
@@ -204,7 +205,7 @@ DBConnection_v9 <- R6::R6Class(
       )
 
       # use db if available
-      if(!is.null(self$config$db)){
+      if(!is.null(self$config$db) & !self$config$driver %in% c("PostgreSQL Unicode")){
         tryCatch(
           {
             a <- DBI::dbExecute(private$pconnection, glue::glue({
