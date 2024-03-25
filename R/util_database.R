@@ -12,14 +12,14 @@ random_file <- function(folder, extension = ".csv") {
 
 
 write_data_infile <- function(
-  dt,
-  file = paste0(tempfile(), ".csv"),
-  colnames = T,
-  eol = "\n",
-  quote = "auto",
-  na = "\\N",
-  sep = ","
-  ) {
+    dt,
+    file = paste0(tempfile(), ".csv"),
+    colnames = T,
+    eol = "\n",
+    quote = "auto",
+    na = "\\N",
+    sep = ","
+) {
   # infinites and NANs get written as text
   # which destroys the upload
   # we need to set them to NA
@@ -29,35 +29,35 @@ write_data_infile <- function(
     if (inherits(dt[[i]], "POSIXt")) dt[, (i) := as.character(get(i))]
   }
   fwrite(dt,
-    file = file,
-    logical01 = T,
-    na = na,
-    col.names = colnames,
-    eol = eol,
-    quote = quote,
-    sep = sep
+         file = file,
+         logical01 = T,
+         na = na,
+         col.names = colnames,
+         eol = eol,
+         quote = quote,
+         sep = sep
   )
 }
 
 load_data_infile <- function(
-  connection,
-  dbconfig,
-  table,
-  dt,
-  file,
-  force_tablock
-  ) {
+    connection,
+    dbconfig,
+    table,
+    dt,
+    file,
+    force_tablock
+) {
   UseMethod("load_data_infile")
 }
 
 load_data_infile.default <- function(
-  connection = NULL,
-  dbconfig = NULL,
-  table,
-  dt = NULL,
-  file = "/xtmp/x123.csv",
-  force_tablock = FALSE
-  ) {
+    connection = NULL,
+    dbconfig = NULL,
+    table,
+    dt = NULL,
+    file = "/xtmp/x123.csv",
+    force_tablock = FALSE
+) {
   if (is.null(dt)) {
     return()
   }
@@ -99,13 +99,13 @@ load_data_infile.default <- function(
 }
 
 `load_data_infile.Microsoft SQL Server` <- function(
-  connection = NULL,
-  dbconfig = NULL,
-  table,
-  dt,
-  file = tempfile(),
-  force_tablock = FALSE
-  ) {
+    connection = NULL,
+    dbconfig = NULL,
+    table,
+    dt,
+    file = tempfile(),
+    force_tablock = FALSE
+) {
   if (is.null(dt)) {
     return()
   }
@@ -238,30 +238,59 @@ load_data_infile.default <- function(
   invisible()
 }
 
+## TODOAUGUST
+`load_data_infile.PostgreSQL` <- function(
+    connection = NULL,
+    dbconfig = NULL,
+    table,
+    dt,
+    file = tempfile(),
+    force_tablock = FALSE
+) {
+  if (is.null(dt)) {
+    return()
+  }
+  if (nrow(dt) == 0) {
+    return()
+  }
+
+  a <- Sys.time()
+
+  DBI::dbWriteTable(connection, table, dt, create = F, append = T)
+
+  b <- Sys.time()
+  dif <- round(as.numeric(difftime(b, a, units = "secs")), 1)
+  #if (config$verbose) message(glue::glue("Uploaded {nrow(dt)} rows in {dif} seconds to {table}"))
+
+  #update_config_last_updated(type = "data", tag = table)
+
+  invisible()
+}
+
 ######### upsert_load_data_infile
 
 upsert_load_data_infile <- function(
-  connection,
-  dbconfig,
-  table,
-  dt,
-  file,
-  fields,
-  keys,
-  drop_indexes){
+    connection,
+    dbconfig,
+    table,
+    dt,
+    file,
+    fields,
+    keys,
+    drop_indexes){
   UseMethod("upsert_load_data_infile")
 }
 
 upsert_load_data_infile.default <- function(
-  connection = NULL,
-  dbconfig = NULL,
-  table,
-  dt,
-  file = "/tmp/x123.csv",
-  fields,
-  keys = NULL,
-  drop_indexes = NULL
-  ) {
+    connection = NULL,
+    dbconfig = NULL,
+    table,
+    dt,
+    file = "/tmp/x123.csv",
+    fields,
+    keys = NULL,
+    drop_indexes = NULL
+) {
   temp_name <- random_uuid()
   # ensure that the table is removed **FIRST** (before deleting the connection)
   on.exit(DBI::dbRemoveTable(connection, temp_name), add = TRUE, after = FALSE)
@@ -310,15 +339,15 @@ upsert_load_data_infile.default <- function(
 }
 
 `upsert_load_data_infile.Microsoft SQL Server` <- function(
-  connection,
-  dbconfig,
-  table,
-  dt,
-  file = tempfile(),
-  fields,
-  keys,
-  drop_indexes = NULL
-  ) {
+    connection,
+    dbconfig,
+    table,
+    dt,
+    file = tempfile(),
+    fields,
+    keys,
+    drop_indexes = NULL
+) {
   # conn <- schema$output$conn
   # db_config <- config$db_config
   # table <- schema$output$db_table
@@ -387,6 +416,89 @@ upsert_load_data_infile.default <- function(
   invisible()
 }
 
+### TODOAUGUST
+`upsert_load_data_infile.PostgreSQL` <- function(
+    connection,
+    dbconfig,
+    table,
+    dt,
+    file = tempfile(),
+    fields,
+    keys,
+    drop_indexes = NULL
+) {
+  # conn <- schema$output$conn
+  # db_config <- config$db_config
+  # table <- schema$output$db_table
+  # dt <- data_clean
+  # file <- tempfile()
+  # fields <- schema$output$db_fields
+  # keys <- schema$output$keys
+  # drop_indexes <- NULL
+
+  temp_name <- paste0("tmp", random_uuid())
+
+  # ensure that the table is removed **FIRST** (before deleting the connection)
+  on.exit(DBI::dbRemoveTable(connection, temp_name), add = TRUE, after = FALSE)
+
+  sql <- glue::glue("SELECT * INTO {temp_name} FROM {table} WHERE 1 = 0;")
+  DBI::dbExecute(connection, sql)
+
+  load_data_infile(
+    connection = connection,
+    dbconfig = dbconfig,
+    table = temp_name,
+    dt = dt,
+    file = file,
+    force_tablock = TRUE
+  )
+
+  a <- Sys.time()
+  add_index(
+    connection = connection,
+    table = temp_name,
+    keys = keys,
+    index = "ind1"
+  )
+
+  vals_fields <- glue::glue_collapse(fields, sep = ", ")
+  vals <- glue::glue("{fields} = VALUES({fields})")
+  vals <- glue::glue_collapse(vals, sep = ", ")
+
+  sql_on_keys <- glue::glue("{t} = {s}", t = paste0("t.", keys), s = paste0("s.", keys))
+  sql_on_keys <- paste0(sql_on_keys, collapse = " and ")
+
+  update_fields = setdiff(fields, keys)
+  sql_update_set <- glue::glue("{t} = {s}", t = update_fields, s = paste0("s.", update_fields))
+  sql_update_set <- paste0(sql_update_set, collapse = ", ")
+
+  sql_insert_fields <- paste0(fields, collapse = ", ")
+  sql_insert_s_fields <- paste0(paste0("s.", fields), collapse = ", ")
+
+  sql <- glue::glue("
+  MERGE INTO {table} t
+  USING {temp_name} s
+  ON ({sql_on_keys})
+  WHEN MATCHED
+  THEN UPDATE SET
+    {sql_update_set}
+  WHEN NOT MATCHED
+  THEN INSERT ({sql_insert_fields})
+    VALUES ({sql_insert_s_fields});
+  ")
+
+  print(sql)
+
+  DBI::dbExecute(connection, sql)
+
+  b <- Sys.time()
+  dif <- round(as.numeric(difftime(b, a, units = "secs")), 1)
+  #if (config$verbose) message(glue::glue("Upserted {nrow(dt)} rows in {dif} seconds from {temp_name} to {table}"))
+
+  #update_config_last_updated(type = "data", tag = table)
+  invisible()
+}
+
 ######### create_table
 create_table <- function(connection, table, fields, keys) UseMethod("create_table")
 
@@ -395,7 +507,7 @@ create_table.default <- function(connection, table, fields, keys = NULL) {
   fields_new[fields == "TEXT"] <- "TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci"
 
   sql <- DBI::sqlCreateTable(connection, table, fields_new,
-    row.names = F, temporary = F
+                             row.names = F, temporary = F
   )
   DBI::dbExecute(connection, sql)
 }
@@ -421,6 +533,32 @@ create_table.default <- function(connection, table, fields, keys = NULL) {
   DBI::dbExecute(connection, sql)
 }
 
+### TODOAUGUST
+`create_table.PostgreSQL` <- function(connection, table, fields, keys = NULL) {
+  fields_new <- fields
+  fields_new[fields == "TEXT"] <- "VARCHAR"
+  fields_new[fields == "DOUBLE"] <- "REAL"
+  fields_new[fields == "BOOLEAN"] <- "BIT"
+
+  if (!is.null(keys)) fields_new[names(fields_new) %in% keys] <- paste0(fields_new[names(fields_new) %in% keys], " NOT NULL")
+
+  print(table)
+  print(fields_new)
+
+  sql <- DBI::sqlCreateTable(
+    connection,
+    table,
+    fields_new,
+    row.names = F,
+    temporary = F
+  ) |>
+    stringr::str_replace("\\\\", "\\") |>
+    stringr::str_replace("\"", "") |>
+    stringr::str_replace("\"", "")
+  print(sql)
+  DBI::dbExecute(connection, sql)
+}
+
 ######### add_constraint
 add_constraint <- function(connection, table, keys) UseMethod("add_constraint")
 
@@ -432,6 +570,22 @@ add_constraint.default <- function(connection, table, keys) {
   sql <- glue::glue("
           ALTER table {table}
           ADD CONSTRAINT {constraint} PRIMARY KEY CLUSTERED ({primary_keys});")
+  # print(sql)
+  a <- DBI::dbExecute(connection, sql)
+  # DBI::dbExecute(connection, "SHOW INDEX FROM x");
+  t1 <- Sys.time()
+  dif <- round(as.numeric(difftime(t1, t0, units = "secs")), 1)
+  #if (config$verbose) message(glue::glue("Added constraint {constraint} in {dif} seconds to {table}"))
+}
+
+add_constraint.PostgreSQL <- function(connection, table, keys) {
+  t0 <- Sys.time()
+
+  primary_keys <- glue::glue_collapse(keys, sep = ", ")
+  constraint <- glue::glue("PK_{table}")
+  sql <- glue::glue("
+          ALTER table {table}
+          ADD CONSTRAINT {constraint} PRIMARY KEY ({primary_keys});")
   # print(sql)
   a <- DBI::dbExecute(connection, sql)
   # DBI::dbExecute(connection, "SHOW INDEX FROM x");
@@ -466,6 +620,23 @@ get_indexes <- function(connection, table) UseMethod("get_indexes")
   return(retval)
 }
 
+get_indexes.PostgreSQL <- function(connection, table){
+  index_name <- NULL
+  table_name <- NULL
+
+  sql <- "
+    select tablename, indexname
+    from pg_indexes
+  "
+
+  table_rows <- connection %>%
+    DBI::dbGetQuery(sql) %>%
+    dplyr::filter(!is.na(indexname) & !stringr::str_detect(indexname, "^pk")) %>%
+    setDT()
+  retval <- table_rows[tablename %in% table]$indexname
+  return(retval)
+}
+
 drop_index <- function(connection, table, index) UseMethod("drop_index")
 
 drop_index.default <- function(connection, table, index) {
@@ -488,15 +659,25 @@ drop_index.default <- function(connection, table, index) {
   )
 }
 
+drop_index.PostgreSQL <- function(connection, table, index) {
+  try(
+    DBI::dbExecute(
+      connection,
+      glue::glue("DROP INDEX IF EXISTS {index}")
+    ),
+    TRUE
+  )
+}
+
 add_index <- function(connection, table, index, keys) UseMethod("add_index")
 
 add_index.default <- function(connection, table, keys, index) {
   keys <- glue::glue_collapse(keys, sep = ", ")
 
   sql <- glue::glue("
-    ALTER TABLE `{table}` ADD INDEX `{index}` ({keys})
+    ALTER TABLE {table} ADD INDEX {index} ({keys})
     ;")
-  # print(sql)
+  print(sql)
   try(a <- DBI::dbExecute(connection, sql), T)
 }
 
@@ -506,7 +687,19 @@ add_index.default <- function(connection, table, keys, index) {
   try(
     DBI::dbExecute(
       connection,
-      glue::glue("CREATE INDEX {index} ON {table} ({keys});")
+      glue::glue("CREATE INDEX {index} IF NOT EXISTS ON {table} ({keys});")
+    ),
+    T
+  )
+}
+
+add_index.PostgreSQL <- function(connection, table, keys, index) {
+  keys <- glue::glue_collapse(keys, sep = ", ")
+
+  try(
+    DBI::dbExecute(
+      connection,
+      glue::glue("CREATE INDEX IF NOT EXISTS {index} ON {table} ({keys});")
     ),
     T
   )
@@ -526,7 +719,10 @@ drop_all_rows <- function(connection, table) {
 #' @param table Table name
 #' @param condition A string SQL condition
 #' @export
-drop_rows_where <- function(connection, table, condition) {
+
+drop_rows_where <- function(connection, table, condition) UseMethod("drop_rows_where")
+
+`drop_rows_where.Microsoft SQL Server` <- function(connection, table, condition) {
   t0 <- Sys.time()
 
   # find out how many rows to delete
@@ -576,7 +772,33 @@ drop_rows_where <- function(connection, table, condition) {
   #update_config_last_updated(type = "data", tag = table)
 }
 
-keep_rows_where <- function(connection, table, condition) {
+drop_rows_where.PostgreSQL <- function(connection, table, condition) {
+  # If there is a need to switch to dropping only a fixed number of rows per call, the syntax is:
+  # DBI::dbExecute(connection, glue::glue(
+  #   "DELETE FROM {table}
+  #   WHERE ctid IN (
+  #     SELECT ctid
+  #     FROM {table}
+  #     WHERE {condition}
+  #     LIMIT {num_deleting}
+  #   ); "
+  #))
+  t0 <- Sys.time()
+
+  sql = glue::glue("delete from {table} where {condition};")
+
+  DBI::dbExecute(connection, sql)
+
+  t1 <- Sys.time()
+  dif <- round(as.numeric(difftime(t1, t0, units = "secs")), 1)
+  #if (config$verbose) message(glue::glue("Kept rows in {dif} seconds from {table}"))
+
+  #update_config_last_updated(type = "data", tag = table)
+}
+
+keep_rows_where <- function(connection, table, condition) UseMethod("keep_rows_where")
+
+`keep_rows_where.Microsoft SQL Server` <- function(connection, table, condition) {
 
   t0 <- Sys.time()
   temp_name <- paste0("tmp", random_uuid())
@@ -587,6 +809,25 @@ keep_rows_where <- function(connection, table, condition) {
   DBI::dbRemoveTable(connection, name = table)
 
   sql <- glue::glue("EXEC sp_rename '{temp_name}', '{table}'")
+  DBI::dbExecute(connection, sql)
+  t1 <- Sys.time()
+  dif <- round(as.numeric(difftime(t1, t0, units = "secs")), 1)
+  #if (config$verbose) message(glue::glue("Kept rows in {dif} seconds from {table}"))
+
+  #update_config_last_updated(type = "data", tag = table)
+}
+
+keep_rows_where.PostgreSQL <- function(connection, table, condition) {
+
+  t0 <- Sys.time()
+  temp_name <- paste0("tmp", random_uuid())
+
+  sql <- glue::glue("SELECT * INTO {temp_name} FROM {table} WHERE {condition}")
+  DBI::dbExecute(connection, sql)
+
+  DBI::dbRemoveTable(connection, name = table)
+
+  sql <- glue::glue("ALTER TABLE {temp_name} RENAME TO {table}")
   DBI::dbExecute(connection, sql)
   t1 <- Sys.time()
   dif <- round(as.numeric(difftime(t1, t0, units = "secs")), 1)
@@ -613,6 +854,3 @@ list_indexes <- function(connection, table) {
 drop_table <- function(connection, table) {
   return(try(DBI::dbRemoveTable(connection, name = table), TRUE))
 }
-
-
-
