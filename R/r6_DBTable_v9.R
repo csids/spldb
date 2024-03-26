@@ -555,15 +555,11 @@ DBTable_v9 <- R6::R6Class(
     drop_rows_where = function(condition) {
       private$lazy_creation_of_table()
 
-      # check that it's deleted afterwards!
-      attempts <- 0
-      while(attempts <= 2){
-        drop_rows_where(connection = self$dbconnection$autoconnection, self$table_name, condition)
-
-        if(self$nrow(use_count = TRUE) == 0) break()
-        attempts <- attempts + 1
-        Sys.sleep(1)
-      }
+      drop_rows_where(
+        connection = self$dbconnection$autoconnection,
+        self$table_name,
+        condition
+      )
     },
 
     #' @description
