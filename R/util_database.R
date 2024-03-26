@@ -238,7 +238,6 @@ load_data_infile.default <- function(
   invisible()
 }
 
-## TODOAUGUST
 `load_data_infile.PostgreSQL` <- function(
     connection = NULL,
     dbconfig = NULL,
@@ -255,16 +254,6 @@ load_data_infile.default <- function(
   }
 
   a <- Sys.time()
-
-  # DBI::dbWriteTable(connection, table, dt, create = F, append = T)
-
-  #data.table::fwrite(z1000, "mt.csv")
-  #URI <- sprintf("postgresql://%s:%s@%s:%s", "postgres", "mysecretpassword", "127.0.0.1", "35432")
-  #system(
-  #  sprintf("psql.exe -U postgres -c \"\\copy %s (%s) from %s (FORMAT CSV, HEADER)\" %s",
-  #          "mt", paste(colnames(z1000), collapse = ","),
-  #          sQuote("mt.csv"), URI)
-  #)
 
   correct_order <- DBI::dbListFields(connection, table)
 
@@ -284,14 +273,14 @@ load_data_infile.default <- function(
 
   on.exit(unlink(file), add = T)
 
-  sql = sprintf(
+  sql <- sprintf(
     "\"\\copy %s (%s) from '%s' (FORMAT CSV, DELIMITER '\t')\"",
     table,
     paste(correct_order, collapse = ","),
     file
   )
 
-  uri = sprintf(
+  uri <- sprintf(
     "postgresql://%s:%s@%s:%s/%s",
     dbconfig$user,
     dbconfig$password,
@@ -316,8 +305,6 @@ load_data_infile.default <- function(
   b <- Sys.time()
   dif <- round(as.numeric(difftime(b, a, units = "secs")), 1)
   #if (config$verbose) message(glue::glue("Uploaded {nrow(dt)} rows in {dif} seconds to {table}"))
-
-  #update_config_last_updated(type = "data", tag = table)
 
   invisible()
 }
@@ -471,8 +458,7 @@ upsert_load_data_infile.default <- function(
   invisible()
 }
 
-### TODOAUGUST
-`upsert_load_data_infile.PostgreSQL` <- function(
+upsert_load_data_infile.PostgreSQL <- function(
     connection,
     dbconfig,
     table,
@@ -482,14 +468,6 @@ upsert_load_data_infile.default <- function(
     keys,
     drop_indexes = NULL
 ) {
-  # conn <- schema$output$conn
-  # db_config <- config$db_config
-  # table <- schema$output$db_table
-  # dt <- data_clean
-  # file <- tempfile()
-  # fields <- schema$output$db_fields
-  # keys <- schema$output$keys
-  # drop_indexes <- NULL
 
   temp_name <- paste0("tmp", random_uuid())
 
@@ -513,7 +491,7 @@ upsert_load_data_infile.default <- function(
     connection = connection,
     table = temp_name,
     keys = keys,
-    index = "ind1"
+    index = "ind" + random_uuid()
   )
 
   vals_fields <- glue::glue_collapse(fields, sep = ", ")
@@ -523,7 +501,7 @@ upsert_load_data_infile.default <- function(
   sql_on_keys <- glue::glue("{t} = {s}", t = paste0("t.", keys), s = paste0("s.", keys))
   sql_on_keys <- paste0(sql_on_keys, collapse = " and ")
 
-  update_fields = setdiff(fields, keys)
+  update_fields <- setdiff(fields, keys)
   sql_update_set <- glue::glue("{t} = {s}", t = update_fields, s = paste0("s.", update_fields))
   sql_update_set <- paste0(sql_update_set, collapse = ", ")
 
@@ -542,15 +520,12 @@ upsert_load_data_infile.default <- function(
     VALUES ({sql_insert_s_fields});
   ")
 
-  print(sql)
-
   DBI::dbExecute(connection, sql)
 
   b <- Sys.time()
   dif <- round(as.numeric(difftime(b, a, units = "secs")), 1)
   #if (config$verbose) message(glue::glue("Upserted {nrow(dt)} rows in {dif} seconds from {temp_name} to {table}"))
 
-  #update_config_last_updated(type = "data", tag = table)
   invisible()
 }
 
@@ -588,7 +563,6 @@ create_table.default <- function(connection, table, fields, keys = NULL) {
   DBI::dbExecute(connection, sql)
 }
 
-### TODOAUGUST
 `create_table.PostgreSQL` <- function(connection, table, fields, keys = NULL) {
   fields_new <- fields
   fields_new[fields == "TEXT"] <- "VARCHAR"
@@ -596,9 +570,6 @@ create_table.default <- function(connection, table, fields, keys = NULL) {
   fields_new[fields == "BOOLEAN"] <- "BIT"
 
   if (!is.null(keys)) fields_new[names(fields_new) %in% keys] <- paste0(fields_new[names(fields_new) %in% keys], " NOT NULL")
-
-  print(table)
-  print(fields_new)
 
   sql <- DBI::sqlCreateTable(
     connection,
@@ -638,12 +609,14 @@ add_constraint.PostgreSQL <- function(connection, table, keys) {
 
   primary_keys <- glue::glue_collapse(keys, sep = ", ")
   constraint <- glue::glue("PK_{table}")
-  sql <- glue::glue("
-          ALTER table {table}
-          ADD CONSTRAINT {constraint} PRIMARY KEY ({primary_keys});")
-  # print(sql)
+  sql <- glue::glue(
+    "ALTER table {table}
+    ADD CONSTRAINT {constraint}
+    PRIMARY KEY ({primary_keys});"
+  )
+
   a <- DBI::dbExecute(connection, sql)
-  # DBI::dbExecute(connection, "SHOW INDEX FROM x");
+
   t1 <- Sys.time()
   dif <- round(as.numeric(difftime(t1, t0, units = "secs")), 1)
   #if (config$verbose) message(glue::glue("Added constraint {constraint} in {dif} seconds to {table}"))
@@ -730,9 +703,9 @@ add_index.default <- function(connection, table, keys, index) {
   keys <- glue::glue_collapse(keys, sep = ", ")
 
   sql <- glue::glue("
-    ALTER TABLE {table} ADD INDEX {index} ({keys})
+    ALTER TABLE `{table}` ADD INDEX `{index}` ({keys})
     ;")
-  print(sql)
+  # print(sql)
   try(a <- DBI::dbExecute(connection, sql), T)
 }
 
@@ -840,15 +813,13 @@ drop_rows_where.PostgreSQL <- function(connection, table, condition) {
   #))
   t0 <- Sys.time()
 
-  sql = glue::glue("delete from {table} where {condition};")
+  sql <- glue::glue("delete from {table} where {condition};")
 
   DBI::dbExecute(connection, sql)
 
   t1 <- Sys.time()
   dif <- round(as.numeric(difftime(t1, t0, units = "secs")), 1)
   #if (config$verbose) message(glue::glue("Kept rows in {dif} seconds from {table}"))
-
-  #update_config_last_updated(type = "data", tag = table)
 }
 
 keep_rows_where <- function(connection, table, condition) UseMethod("keep_rows_where")
@@ -884,11 +855,10 @@ keep_rows_where.PostgreSQL <- function(connection, table, condition) {
 
   sql <- glue::glue("ALTER TABLE {temp_name} RENAME TO {table}")
   DBI::dbExecute(connection, sql)
+
   t1 <- Sys.time()
   dif <- round(as.numeric(difftime(t1, t0, units = "secs")), 1)
   #if (config$verbose) message(glue::glue("Kept rows in {dif} seconds from {table}"))
-
-  #update_config_last_updated(type = "data", tag = table)
 }
 
 list_indexes <- function(connection, table) {

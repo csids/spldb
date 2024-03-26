@@ -80,9 +80,9 @@ dbtable$tbl()
 
 dbtable$upsert_data(csdb::nor_covid19_cases_by_time_location)
 dbtable$drop_rows_where("calmonth = 9")
-dbtable$keep_rows_where("calmonth = 9")
+dbtable$upsert_data(csdb::nor_covid19_cases_by_time_location)
+dbtable$keep_rows_where("calmonth != 9")
 dbtable$add_indexes()
-dbtable$drop_constraint()
 dbtable$confirm_indexes()
 
 dbtable$nrow()
