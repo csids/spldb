@@ -256,7 +256,62 @@ load_data_infile.default <- function(
 
   a <- Sys.time()
 
-  DBI::dbWriteTable(connection, table, dt, create = F, append = T)
+  # DBI::dbWriteTable(connection, table, dt, create = F, append = T)
+
+  #data.table::fwrite(z1000, "mt.csv")
+  #URI <- sprintf("postgresql://%s:%s@%s:%s", "postgres", "mysecretpassword", "127.0.0.1", "35432")
+  #system(
+  #  sprintf("psql.exe -U postgres -c \"\\copy %s (%s) from %s (FORMAT CSV, HEADER)\" %s",
+  #          "mt", paste(colnames(z1000), collapse = ","),
+  #          sQuote("mt.csv"), URI)
+  #)
+
+  correct_order <- DBI::dbListFields(connection, table)
+
+  if (length(correct_order) > 0) {
+    dt <- dt[, correct_order, with = F]
+  }
+
+  write_data_infile(
+    dt = dt,
+    file = file,
+    colnames = F,
+    eol = "\n",
+    quote = FALSE,
+    na = "",
+    sep = "\t"
+  )
+
+  on.exit(unlink(file), add = T)
+
+  sql = sprintf(
+    "\"\\copy %s (%s) from '%s' (FORMAT CSV, DELIMITER '\t')\"",
+    table,
+    paste(correct_order, collapse = ","),
+    file
+  )
+
+  uri = sprintf(
+    "postgresql://%s:%s@%s:%s/%s",
+    dbconfig$user,
+    dbconfig$password,
+    dbconfig$server,
+    dbconfig$port,
+    dbconfig$db
+  )
+
+  args <- c(
+    "-U",
+    dbconfig$user,
+    "-c",
+    sql,
+    uri
+  )
+
+  system2(
+    "psql",
+    args = args
+  )
 
   b <- Sys.time()
   dif <- round(as.numeric(difftime(b, a, units = "secs")), 1)
