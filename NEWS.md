@@ -1,3 +1,7 @@
+# Version 2024.3.27
+
+- csdb now supports PostgreSQL databases as well as MS SQL Server.
+
 # Version 2024.3.11
 
 - Including use_count as an argument in nrow in DBTable_v9, which is slower but more accurate.

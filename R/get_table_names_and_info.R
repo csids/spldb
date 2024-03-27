@@ -54,7 +54,7 @@ get_table_names_and_info.PostgreSQL <- function(connection) {
             WHERE relkind = 'r'
      ) raw_storage
   ) storage_with_data_size
-  order by nrow desc;"
+  order by table_name;"
 
   table_rows = DBI::dbGetQuery(connection, sql) %>% setDT()
 
