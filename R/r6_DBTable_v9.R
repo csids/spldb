@@ -306,14 +306,14 @@ DBTable_v9 <- R6::R6Class(
     #' @param validator_field_contents A function that validates the data before it is inserted into the database.
     #' @return A new `DBTable_v9` object.
     initialize = function(
-      dbconfig,
-      table_name,
-      field_types,
-      keys,
-      indexes = NULL,
-      validator_field_types = validator_field_types_blank,
-      validator_field_contents = validator_field_contents_blank
-      ) {
+    dbconfig,
+    table_name,
+    field_types,
+    keys,
+    indexes = NULL,
+    validator_field_types = validator_field_types_blank,
+    validator_field_contents = validator_field_contents_blank
+    ) {
 
       force(dbconfig)
       self$dbconfig <- list()
@@ -340,7 +340,8 @@ DBTable_v9 <- R6::R6Class(
       force(table_name)
       self$table_name <- table_name
 
-      self$table_name_fully_specified <- paste0("[", paste(self$dbconfig$db, self$dbconfig$schema, self$table_name, sep = "].["), "]") |>
+      table_fully_specified_vec = c(self$dbconfig$db, self$dbconfig$schema, self$table_name)
+      self$table_name_fully_specified <- paste(table_fully_specified_vec, collapse = ".") |>
         stringr::str_remove_all("\\[]\\.")
 
       force(field_types)
@@ -554,15 +555,11 @@ DBTable_v9 <- R6::R6Class(
     drop_rows_where = function(condition) {
       private$lazy_creation_of_table()
 
-      # check that it's deleted afterwards!
-      attempts <- 0
-      while(attempts <= 2){
-        drop_rows_where(connection = self$dbconnection$autoconnection, self$table_name, condition)
-
-        if(self$nrow(use_count = TRUE) == 0) break()
-        attempts <- attempts + 1
-        Sys.sleep(1)
-      }
+      drop_rows_where(
+        connection = self$dbconnection$autoconnection,
+        self$table_name,
+        condition
+      )
     },
 
     #' @description
@@ -750,4 +747,3 @@ DBTable_v9 <- R6::R6Class(
     }
   )
 )
-
