@@ -87,7 +87,7 @@ Create a new DBTable_v9 object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dbconfig}}{Configuration details of the database (driver, server, port, db, schema, user, password, trusted_connection).}
+\item{\code{dbconfig}}{Configuration details of the database (driver, server, port, db, schema, user, password, trusted_connection, sslmode).}
 
 \item{\code{table_name}}{Name of the table in the database.}
 

@@ -297,7 +297,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Create a new DBTable_v9 object.
     #'
-    #' @param dbconfig Configuration details of the database (driver, server, port, db, schema, user, password, trusted_connection).
+    #' @param dbconfig Configuration details of the database (driver, server, port, db, schema, user, password, trusted_connection, sslmode).
     #' @param table_name Name of the table in the database.
     #' @param field_types The types of each column in the database table (INTEGER, DOUBLE, TEXT, BOOLEAN, DATE, DATETIME).
     #' @param keys The combination of these variables uniquely identifies each row of data in the table.
@@ -325,6 +325,7 @@ DBTable_v9 <- R6::R6Class(
       self$dbconfig$user <- dbconfig$user
       self$dbconfig$password <- dbconfig$password
       self$dbconfig$trusted_connection <- dbconfig$trusted_connection
+      self$dbconfig$sslmode <- dbconfig$sslmode
 
       self$dbconnection <- DBConnection_v9$new(
         driver = self$dbconfig$driver,
@@ -334,7 +335,8 @@ DBTable_v9 <- R6::R6Class(
         schema = self$dbconfig$schema,
         user = self$dbconfig$user,
         password = self$dbconfig$password,
-        trusted_connection = self$dbconfig$trusted_connection
+        trusted_connection = self$dbconfig$trusted_connection,
+        sslmode = self$dbconfig$sslmode
       )
 
       force(table_name)
