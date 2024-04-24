@@ -344,7 +344,8 @@ DBTable_v9 <- R6::R6Class(
       force(table_name)
       self$table_name <- table_name
 
-      table_fully_specified_vec = c(self$dbconfig$db, self$dbconfig$schema, self$table_name)
+      # table_fully_specified_vec = c(self$dbconfig$db, self$dbconfig$schema, self$table_name)
+      table_fully_specified_vec = c(self$dbconfig$schema, self$table_name)
       self$table_name_fully_specified <- paste(table_fully_specified_vec, collapse = ".") |>
         stringr::str_remove_all("\\[]\\.")
 
