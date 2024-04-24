@@ -349,7 +349,7 @@ DBTable_v9 <- R6::R6Class(
         stringr::str_remove_all("\\[]\\.")
 
       self$table_name_fully_specified_with_dbi_id <- DBI::Id(
-        database = self$dbconfig$db,
+        #database = self$dbconfig$db, this could be catalog??
         schema = self$dbconfig$schema,
         table = self$table_name
       )
@@ -616,7 +616,7 @@ DBTable_v9 <- R6::R6Class(
     tbl = function() {
       private$lazy_creation_of_table()
       retval <- self$dbconnection$autoconnection %>%
-        dplyr::tbl(self$table_name_fully_specified)
+        dplyr::tbl(self$table_name_fully_specified_with_dbi_id)
 
       return(retval)
     },
