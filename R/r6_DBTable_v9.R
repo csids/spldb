@@ -423,7 +423,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Does the table exist
     table_exists = function() {
-      return(DBI::dbExistsTable(self$dbconnection$autoconnection, self$table_name))
+      return(DBI::dbExistsTable(self$dbconnection$autoconnection, self$table_name_fully_specified))
     },
 
     #' @description
@@ -453,7 +453,7 @@ DBTable_v9 <- R6::R6Class(
     remove_table = function() {
       if (self$table_exists()) {
         message(glue::glue("Dropping table {self$table_name}"))
-        DBI::dbRemoveTable(self$dbconnection$autoconnection, self$table_name)
+        DBI::dbRemoveTable(self$dbconnection$autoconnection, self$table_name_fully_specified)
       }
     },
 
@@ -484,7 +484,7 @@ DBTable_v9 <- R6::R6Class(
       load_data_infile(
         connection = self$dbconnection$autoconnection,
         dbconfig = self$dbconnection$config,
-        table = self$table_name,
+        table = self$table_name_fully_specified,
         dt = newdata,
         file = infile
       )
@@ -534,7 +534,7 @@ DBTable_v9 <- R6::R6Class(
       upsert_load_data_infile(
         connection = self$dbconnection$autoconnection,
         dbconfig = self$dbconnection$config,
-        table = self$table_name,
+        table = self$table_name_fully_specified,
         dt = newdata[, names(self$field_types), with = F],
         file = infile,
         fields = names(self$field_types),
@@ -559,7 +559,7 @@ DBTable_v9 <- R6::R6Class(
 
       drop_rows_where(
         connection = self$dbconnection$autoconnection,
-        self$table_name,
+        self$table_name_fully_specified,
         condition
       )
     },
@@ -569,7 +569,7 @@ DBTable_v9 <- R6::R6Class(
     #' @param condition SQL text condition.
     keep_rows_where = function(condition) {
       private$lazy_creation_of_table()
-      keep_rows_where(connection = self$dbconnection$autoconnection, self$table_name, condition)
+      keep_rows_where(connection = self$dbconnection$autoconnection, self$table_name_fully_specified, condition)
       private$add_constraint()
     },
 
@@ -608,7 +608,7 @@ DBTable_v9 <- R6::R6Class(
     tbl = function() {
       private$lazy_creation_of_table()
       retval <- self$dbconnection$autoconnection %>%
-        dplyr::tbl(self$table_name)
+        dplyr::tbl(self$table_name_fully_specified)
 
       return(retval)
     },
@@ -635,7 +635,7 @@ DBTable_v9 <- R6::R6Class(
 
         add_index(
           connection = self$dbconnection$autoconnection,
-          table = self$table_name,
+          table = self$table_name_fully_specified,
           index = i,
           keys = self$indexes[[i]]
         )
@@ -650,7 +650,7 @@ DBTable_v9 <- R6::R6Class(
         message(glue::glue("Dropping index {i}"))
         drop_index(
           connection = self$dbconnection$autoconnection,
-          table = self$table_name,
+          table = self$table_name_fully_specified,
           index = i
         )
       }
@@ -662,7 +662,7 @@ DBTable_v9 <- R6::R6Class(
     confirm_indexes = function() {
       indexes_db <- get_indexes(
         connection = self$dbconnection$autoconnection,
-        table = self$table_name
+        table = self$table_name_fully_specified
       )
       indexes_self <- names(self$indexes)
       if(!identical(indexes_db, indexes_self)){
@@ -709,7 +709,7 @@ DBTable_v9 <- R6::R6Class(
     },
 
     check_fields_match = function() {
-      fields <- DBI::dbListFields(self$dbconnection$autoconnection, self$table_name)
+      fields <- DBI::dbListFields(self$dbconnection$autoconnection, self$table_name_fully_specified)
       retval <- identical(fields, names(self$field_types))
       if (retval == FALSE) {
         message(glue::glue(
@@ -725,7 +725,7 @@ DBTable_v9 <- R6::R6Class(
     add_constraint = function() {
       add_constraint(
         connection = self$dbconnection$autoconnection,
-        table = self$table_name,
+        table = self$table_name_fully_specified,
         keys = self$keys
       )
     },
@@ -733,7 +733,7 @@ DBTable_v9 <- R6::R6Class(
     drop_constraint = function() {
       drop_constraint(
         connection = self$dbconnection$autoconnection,
-        table = self$table_name
+        table = self$table_name_fully_specified
       )
     },
 
