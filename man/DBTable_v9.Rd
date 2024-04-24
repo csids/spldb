@@ -22,6 +22,8 @@ and manipulate structural aspects of the database table (e.g. `add_indexes`, `dr
 
 \item{\code{table_name_fully_specified}}{Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).}
 
+\item{\code{table_name_fully_specified_with_dbi_id}}{Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]) using DBI::Id.}
+
 \item{\code{field_types}}{The types of each column in the database table (INTEGER, DOUBLE, TEXT, BOOLEAN, DATE, DATETIME).}
 
 \item{\code{field_types_with_length}}{The same as \code{field_types} but with \code{(100)} added to the end of all TEXT fields.}

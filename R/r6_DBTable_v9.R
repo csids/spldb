@@ -277,6 +277,8 @@ DBTable_v9 <- R6::R6Class(
     table_name = NULL,
     #' @field table_name_fully_specified Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).
     table_name_fully_specified = NULL,
+    #' @field table_name_fully_specified_with_dbi_id Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]) using DBI::Id.
+    table_name_fully_specified_with_dbi_id = NULL,
     #' @field field_types The types of each column in the database table (INTEGER, DOUBLE, TEXT, BOOLEAN, DATE, DATETIME).
     field_types = NULL,
     #' @field field_types_with_length The same as \code{field_types} but with \code{(100)} added to the end of all TEXT fields.
@@ -345,6 +347,12 @@ DBTable_v9 <- R6::R6Class(
       table_fully_specified_vec = c(self$dbconfig$db, self$dbconfig$schema, self$table_name)
       self$table_name_fully_specified <- paste(table_fully_specified_vec, collapse = ".") |>
         stringr::str_remove_all("\\[]\\.")
+
+      self$table_name_fully_specified_with_dbi_id <- DBI::Id(
+        database = self$dbconfig$db,
+        schema = self$dbconfig$schema,
+        table = self$table_name
+      )
 
       force(field_types)
       self$field_types <- field_types
@@ -423,7 +431,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Does the table exist
     table_exists = function() {
-      return(DBI::dbExistsTable(self$dbconnection$autoconnection, self$table_name_fully_specified))
+      return(DBI::dbExistsTable(self$dbconnection$autoconnection, self$table_name_fully_specified_with_dbi_id))
     },
 
     #' @description
@@ -453,7 +461,7 @@ DBTable_v9 <- R6::R6Class(
     remove_table = function() {
       if (self$table_exists()) {
         message(glue::glue("Dropping table {self$table_name}"))
-        DBI::dbRemoveTable(self$dbconnection$autoconnection, self$table_name_fully_specified)
+        DBI::dbRemoveTable(self$dbconnection$autoconnection, self$table_name_fully_specified_with_dbi_id)
       }
     },
 
@@ -709,7 +717,7 @@ DBTable_v9 <- R6::R6Class(
     },
 
     check_fields_match = function() {
-      fields <- DBI::dbListFields(self$dbconnection$autoconnection, self$table_name_fully_specified)
+      fields <- DBI::dbListFields(self$dbconnection$autoconnection, self$table_name_fully_specified_with_dbi_id)
       retval <- identical(fields, names(self$field_types))
       if (retval == FALSE) {
         message(glue::glue(
