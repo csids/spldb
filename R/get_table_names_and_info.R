@@ -33,6 +33,7 @@ get_table_names_and_info <- function(connection) UseMethod("get_table_names_and_
   return(table_rows)
 }
 
+#' @export
 get_table_names_and_info.PostgreSQL <- function(connection) {
 
   sql = "SELECT table_name
