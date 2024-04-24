@@ -32,3 +32,32 @@ get_table_names_and_info <- function(connection) UseMethod("get_table_names_and_
   data.table::shouldPrint(table_rows)
   return(table_rows)
 }
+
+get_table_names_and_info.PostgreSQL <- function(connection) {
+
+  sql = "SELECT table_name
+     , row_estimate AS nrow
+     , cast(total_bytes as decimal)/1073741824 AS size_total_gb
+     , cast(data_bytes as decimal)/1073741824 AS size_data_gb
+     , cast(index_bytes as decimal)/1073741824 AS size_index_gb
+  FROM (
+     SELECT *,
+         total_bytes-index_bytes AS data_bytes
+     FROM (
+         SELECT nspname AS table_schema
+                , relname AS table_name
+                , c.reltuples AS row_estimate
+                , pg_total_relation_size(c.oid) AS total_bytes
+                , pg_indexes_size(c.oid) AS index_bytes
+            FROM pg_class c
+            LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE relkind = 'r'
+     ) raw_storage
+  ) storage_with_data_size
+  order by table_name;"
+
+  table_rows = DBI::dbGetQuery(connection, sql) %>% setDT()
+
+  data.table::shouldPrint(table_rows)
+  return(table_rows)
+}
