@@ -593,7 +593,10 @@ add_constraint.default <- function(connection, table, keys) {
   t0 <- Sys.time()
 
   primary_keys <- glue::glue_collapse(keys, sep = ", ")
-  constraint <- glue::glue("PK_{table}")
+  constraint <- glue::glue("PK_{table}") %>%
+    stringr::str_remove_all("\\.") %>%
+    stringr::str_remove_all("\\[") %>%
+    stringr::str_remove_all("]")
   sql <- glue::glue("
           ALTER table {table}
           ADD CONSTRAINT {constraint} PRIMARY KEY CLUSTERED ({primary_keys});")
@@ -609,7 +612,10 @@ add_constraint.PostgreSQL <- function(connection, table, keys) {
   t0 <- Sys.time()
 
   primary_keys <- glue::glue_collapse(keys, sep = ", ")
-  constraint <- glue::glue("PK_{table}")
+  constraint <- glue::glue("PK_{table}") %>%
+    stringr::str_remove_all("\\.") %>%
+    stringr::str_remove_all("\\[") %>%
+    stringr::str_remove_all("]")
   sql <- glue::glue(
     "ALTER table {table}
     ADD CONSTRAINT {constraint}
@@ -627,7 +633,10 @@ add_constraint.PostgreSQL <- function(connection, table, keys) {
 drop_constraint <- function(connection, table) UseMethod("drop_constraint")
 
 drop_constraint.default <- function(connection, table) {
-  constraint <- glue::glue("PK_{table}")
+  constraint <- glue::glue("PK_{table}") %>%
+    stringr::str_remove_all("\\.") %>%
+    stringr::str_remove_all("\\[") %>%
+    stringr::str_remove_all("]")
   sql <- glue::glue("
           ALTER table {table}
           DROP CONSTRAINT {constraint};")
