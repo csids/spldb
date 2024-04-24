@@ -52,7 +52,8 @@ Create a new DBConnection_v9 object.
   schema = NULL,
   user = NULL,
   password = NULL,
-  trusted_connection = NULL
+  trusted_connection = NULL,
+  sslmode = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -74,6 +75,8 @@ Create a new DBConnection_v9 object.
 \item{\code{password}}{Password}
 
 \item{\code{trusted_connection}}{NULL or "yes"}
+
+\item{\code{sslmode}}{NULL or "require"}
 }
 \if{html}{\out{</div>}}
 }

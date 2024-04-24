@@ -32,6 +32,7 @@ DBConnection_v9 <- R6::R6Class(
     #' @param user User
     #' @param password Password
     #' @param trusted_connection NULL or "yes"
+    #' @param sslmode NULL or "require"
     #' @return A new `DBConnection_v9` object.
     initialize = function(
       driver = NULL,
@@ -41,7 +42,8 @@ DBConnection_v9 <- R6::R6Class(
       schema = NULL,
       user = NULL,
       password = NULL,
-      trusted_connection = NULL
+      trusted_connection = NULL,
+      sslmode = NULL
       ) {
       force(driver)
       force(server)
@@ -51,6 +53,10 @@ DBConnection_v9 <- R6::R6Class(
       force(user)
       force(password)
       force(trusted_connection)
+      force(sslmode)
+
+      if(is.null(trusted_connection)) trusted_connection <- "x"
+      if(is.null(sslmode)) sslmode <- "x"
 
       self$config <- list(
         driver = driver,
@@ -60,7 +66,8 @@ DBConnection_v9 <- R6::R6Class(
         schema = schema,
         user = user,
         password = password,
-        trusted_connection = trusted_connection
+        trusted_connection = trusted_connection,
+        sslmode = sslmode
       )
     },
 
@@ -176,7 +183,7 @@ DBConnection_v9 <- R6::R6Class(
               pwd = self$config$password,
               encoding = "utf8"
             )
-          } else if (self$config$driver %in% c("PostgreSQL Unicode")) {
+          } else if (self$config$sslmode == "require" & self$config$driver %in% c("PostgreSQL Unicode")) {
             private$pconnection <- DBI::dbConnect(
               odbc::odbc(),
               driver = self$config$driver,
@@ -185,7 +192,17 @@ DBConnection_v9 <- R6::R6Class(
               uid = self$config$user,
               password = self$config$password,
               database = self$config$db,
-              encoding = "utf8"
+              sslmode = "require"
+            )
+          } else if (self$config$driver %in% c("PostgreSQL Unicode")) {
+            private$pconnection <- DBI::dbConnect(
+              odbc::odbc(),
+              driver = self$config$driver,
+              server = self$config$server,
+              port = self$config$port,
+              uid = self$config$user,
+              password = self$config$password,
+              database = self$config$db
             )
           } else {
             private$pconnection <- DBI::dbConnect(
