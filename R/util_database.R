@@ -568,6 +568,7 @@ create_table.default <- function(connection, table, fields, keys = NULL) {
   fields_new[fields == "TEXT"] <- "VARCHAR"
   fields_new[fields == "DOUBLE"] <- "REAL"
   fields_new[fields == "BOOLEAN"] <- "BIT"
+  fields_new[fields == "DATETIME"] <- "TIMESTAMP"
 
   if (!is.null(keys)) fields_new[names(fields_new) %in% keys] <- paste0(fields_new[names(fields_new) %in% keys], " NOT NULL")
 
