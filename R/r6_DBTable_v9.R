@@ -277,6 +277,8 @@ DBTable_v9 <- R6::R6Class(
     table_name = NULL,
     #' @field table_name_short_for_mssql_fully_specified_for_postgres Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).
     table_name_short_for_mssql_fully_specified_for_postgres = NULL,
+    #' @field table_name_short_for_mssql_fully_specified_for_postgres_text Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).
+    table_name_short_for_mssql_fully_specified_for_postgres_text = NULL,
     #' @field table_name_fully_specified Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).
     table_name_fully_specified = NULL,
     #' @field table_name_fully_specified_text Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]) as a text string.
@@ -357,6 +359,7 @@ DBTable_v9 <- R6::R6Class(
       if(self$dbconfig$driver %in% c("ODBC Driver 17 for SQL Server")){
         self$table_name_fully_specified <- self$table_name_fully_specified_text
         self$table_name_short_for_mssql_fully_specified_for_postgres <- self$table_name
+        self$table_name_short_for_mssql_fully_specified_for_postgres_text <- self$table_name
       } else {
         self$table_name_fully_specified <- DBI::Id(
           #database = self$dbconfig$db, this could be catalog??
@@ -364,6 +367,7 @@ DBTable_v9 <- R6::R6Class(
           table = self$table_name
         )
         self$table_name_short_for_mssql_fully_specified_for_postgres <- self$table_name_fully_specified
+        self$table_name_short_for_mssql_fully_specified_for_postgres_text <- self$table_name_fully_specified_text
       }
 
       force(field_types)
@@ -504,7 +508,7 @@ DBTable_v9 <- R6::R6Class(
       load_data_infile(
         connection = self$dbconnection$autoconnection,
         dbconfig = self$dbconnection$config,
-        table = self$table_name_fully_specified,
+        table = self$table_name_short_for_mssql_fully_specified_for_postgres_text,
         dt = newdata,
         file = infile
       )
@@ -554,7 +558,7 @@ DBTable_v9 <- R6::R6Class(
       upsert_load_data_infile(
         connection = self$dbconnection$autoconnection,
         dbconfig = self$dbconnection$config,
-        table = self$table_name_fully_specified,
+        table = self$table_name_short_for_mssql_fully_specified_for_postgres_text,
         dt = newdata[, names(self$field_types), with = F],
         file = infile,
         fields = names(self$field_types),
@@ -567,7 +571,7 @@ DBTable_v9 <- R6::R6Class(
     #' Drops all rows in the database table
     drop_all_rows = function() {
       private$lazy_creation_of_table()
-      drop_all_rows(connection = self$dbconnection$autoconnection, self$table_name_fully_specified)
+      drop_all_rows(connection = self$dbconnection$autoconnection, self$table_name_fully_specified_text)
 
     },
 
@@ -579,7 +583,7 @@ DBTable_v9 <- R6::R6Class(
 
       drop_rows_where(
         connection = self$dbconnection$autoconnection,
-        self$table_name_fully_specified,
+        self$table_name_short_for_mssql_fully_specified_for_postgres_text,
         condition
       )
     },
@@ -589,7 +593,7 @@ DBTable_v9 <- R6::R6Class(
     #' @param condition SQL text condition.
     keep_rows_where = function(condition) {
       private$lazy_creation_of_table()
-      keep_rows_where(connection = self$dbconnection$autoconnection, self$table_name_fully_specified, condition)
+      keep_rows_where(connection = self$dbconnection$autoconnection, self$table_name_short_for_mssql_fully_specified_for_postgres_text, condition)
       private$add_constraint()
     },
 
@@ -628,7 +632,7 @@ DBTable_v9 <- R6::R6Class(
     tbl = function() {
       private$lazy_creation_of_table()
       retval <- self$dbconnection$autoconnection %>%
-        dplyr::tbl(self$table_name_fully_specified)
+        dplyr::tbl(self$table_name_short_for_mssql_fully_specified_for_postgres)
 
       return(retval)
     },
@@ -655,7 +659,7 @@ DBTable_v9 <- R6::R6Class(
 
         add_index(
           connection = self$dbconnection$autoconnection,
-          table = self$table_name_fully_specified,
+          table = self$table_name_short_for_mssql_fully_specified_for_postgres_text,
           index = i,
           keys = self$indexes[[i]]
         )
@@ -670,7 +674,7 @@ DBTable_v9 <- R6::R6Class(
         message(glue::glue("Dropping index {i}"))
         drop_index(
           connection = self$dbconnection$autoconnection,
-          table = self$table_name_fully_specified,
+          table = self$table_name_short_for_mssql_fully_specified_for_postgres_text,
           index = i
         )
       }
@@ -682,7 +686,7 @@ DBTable_v9 <- R6::R6Class(
     confirm_indexes = function() {
       indexes_db <- get_indexes(
         connection = self$dbconnection$autoconnection,
-        table = self$table_name_fully_specified
+        table = self$table_name_short_for_mssql_fully_specified_for_postgres_text
       )
       indexes_self <- names(self$indexes)
       if(!identical(indexes_db, indexes_self)){
@@ -729,7 +733,7 @@ DBTable_v9 <- R6::R6Class(
     },
 
     check_fields_match = function() {
-      fields <- DBI::dbListFields(self$dbconnection$autoconnection, self$table_name_fully_specified)
+      fields <- DBI::dbListFields(self$dbconnection$autoconnection, self$table_name_short_for_mssql_fully_specified_for_postgres)
       retval <- identical(fields, names(self$field_types))
       if (retval == FALSE) {
         message(glue::glue(
@@ -745,7 +749,7 @@ DBTable_v9 <- R6::R6Class(
     add_constraint = function() {
       add_constraint(
         connection = self$dbconnection$autoconnection,
-        table = self$table_name_fully_specified,
+        table = self$table_name_short_for_mssql_fully_specified_for_postgres_text,
         keys = self$keys
       )
     },
@@ -753,7 +757,7 @@ DBTable_v9 <- R6::R6Class(
     drop_constraint = function() {
       drop_constraint(
         connection = self$dbconnection$autoconnection,
-        table = self$table_name_fully_specified
+        table = self$table_name_short_for_mssql_fully_specified_for_postgres_text
       )
     },
 

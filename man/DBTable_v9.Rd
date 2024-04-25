@@ -22,6 +22,8 @@ and manipulate structural aspects of the database table (e.g. `add_indexes`, `dr
 
 \item{\code{table_name_short_for_mssql_fully_specified_for_postgres}}{Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).}
 
+\item{\code{table_name_short_for_mssql_fully_specified_for_postgres_text}}{Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).}
+
 \item{\code{table_name_fully_specified}}{Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).}
 
 \item{\code{table_name_fully_specified_text}}{Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]) as a text string.}
