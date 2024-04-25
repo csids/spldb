@@ -275,6 +275,8 @@ DBTable_v9 <- R6::R6Class(
     dbconfig = NULL,
     #' @field table_name Name of the table in the database.
     table_name = NULL,
+    #' @field table_name_short_for_mssql_fully_specified_for_postgres Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).
+    table_name_short_for_mssql_fully_specified_for_postgres = NULL,
     #' @field table_name_fully_specified Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).
     table_name_fully_specified = NULL,
     #' @field table_name_fully_specified_text Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]) as a text string.
@@ -354,12 +356,14 @@ DBTable_v9 <- R6::R6Class(
 
       if(self$dbconfig$driver %in% c("ODBC Driver 17 for SQL Server")){
         self$table_name_fully_specified <- self$table_name_fully_specified_text
+        self$table_name_short_for_mssql_fully_specified_for_postgres <- self$table_name
       } else {
         self$table_name_fully_specified <- DBI::Id(
           #database = self$dbconfig$db, this could be catalog??
           schema = self$dbconfig$schema,
           table = self$table_name
         )
+        self$table_name_short_for_mssql_fully_specified_for_postgres <- self$table_name_fully_specified
       }
 
       force(field_types)
@@ -439,7 +443,7 @@ DBTable_v9 <- R6::R6Class(
     #' @description
     #' Does the table exist
     table_exists = function() {
-      return(DBI::dbExistsTable(self$dbconnection$autoconnection, self$table_name_fully_specified))
+      return(DBI::dbExistsTable(self$dbconnection$autoconnection, self$table_name_short_for_mssql_fully_specified_for_postgres))
     },
 
     #' @description
@@ -469,7 +473,7 @@ DBTable_v9 <- R6::R6Class(
     remove_table = function() {
       if (self$table_exists()) {
         message(glue::glue("Dropping table {self$table_name}"))
-        DBI::dbRemoveTable(self$dbconnection$autoconnection, self$table_name_fully_specified)
+        DBI::dbRemoveTable(self$dbconnection$autoconnection, self$table_name_short_for_mssql_fully_specified_for_postgres)
       }
     },
 
