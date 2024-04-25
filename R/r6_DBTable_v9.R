@@ -508,7 +508,7 @@ DBTable_v9 <- R6::R6Class(
       load_data_infile(
         connection = self$dbconnection$autoconnection,
         dbconfig = self$dbconnection$config,
-        table = self$table_name_short_for_mssql_fully_specified_for_postgres_text,
+        table = self$table_name_short_for_mssql_fully_specified_for_postgres,
         dt = newdata,
         file = infile
       )
@@ -558,7 +558,7 @@ DBTable_v9 <- R6::R6Class(
       upsert_load_data_infile(
         connection = self$dbconnection$autoconnection,
         dbconfig = self$dbconnection$config,
-        table = self$table_name_short_for_mssql_fully_specified_for_postgres_text,
+        table = self$table_name_short_for_mssql_fully_specified_for_postgres,
         dt = newdata[, names(self$field_types), with = F],
         file = infile,
         fields = names(self$field_types),

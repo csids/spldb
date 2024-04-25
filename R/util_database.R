@@ -255,6 +255,8 @@ load_data_infile.default <- function(
 
   a <- Sys.time()
 
+  table_text <- DBI::dbQuoteIdentifier(connection, table)
+
   correct_order <- DBI::dbListFields(connection, table)
 
   if (length(correct_order) > 0) {
@@ -275,7 +277,7 @@ load_data_infile.default <- function(
 
   sql <- sprintf(
     "\"\\copy %s (%s) from '%s' (FORMAT CSV, DELIMITER '\t')\"",
-    table,
+    table_text,
     paste(correct_order, collapse = ","),
     file
   )
@@ -469,12 +471,14 @@ upsert_load_data_infile.PostgreSQL <- function(
     drop_indexes = NULL
 ) {
 
-  temp_name <- paste0("tmp", random_uuid())
+  temp_name <- DBI::Id(schema = table@name[["schema"]], paste0("tmp", random_uuid()))
+  temp_name_text <- DBI::dbQuoteIdentifier(connection, temp_name)
+  table_text <- DBI::dbQuoteIdentifier(connection, table)
 
   # ensure that the table is removed **FIRST** (before deleting the connection)
   on.exit(DBI::dbRemoveTable(connection, temp_name), add = TRUE, after = FALSE)
 
-  sql <- glue::glue("SELECT * INTO {temp_name} FROM {table} WHERE 1 = 0;")
+  sql <- glue::glue("SELECT * INTO {temp_name_text} FROM {table_text} WHERE 1 = 0;")
   DBI::dbExecute(connection, sql)
 
   load_data_infile(
@@ -509,8 +513,8 @@ upsert_load_data_infile.PostgreSQL <- function(
   sql_insert_s_fields <- paste0(paste0("s.", fields), collapse = ", ")
 
   sql <- glue::glue("
-  MERGE INTO {table} t
-  USING {temp_name} s
+  MERGE INTO {table_text} t
+  USING {temp_name_text} s
   ON ({sql_on_keys})
   WHEN MATCHED
   THEN UPDATE SET
