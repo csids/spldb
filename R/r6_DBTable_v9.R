@@ -277,8 +277,8 @@ DBTable_v9 <- R6::R6Class(
     table_name = NULL,
     #' @field table_name_fully_specified Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).
     table_name_fully_specified = NULL,
-    #' @field table_name_fully_specified_with_dbi_id Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]) using DBI::Id.
-    table_name_fully_specified_with_dbi_id = NULL,
+    #' @field table_name_fully_specified_text Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]) as a text string.
+    table_name_fully_specified_text = NULL,
     #' @field field_types The types of each column in the database table (INTEGER, DOUBLE, TEXT, BOOLEAN, DATE, DATETIME).
     field_types = NULL,
     #' @field field_types_with_length The same as \code{field_types} but with \code{(100)} added to the end of all TEXT fields.

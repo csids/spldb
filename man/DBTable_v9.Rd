@@ -22,7 +22,7 @@ and manipulate structural aspects of the database table (e.g. `add_indexes`, `dr
 
 \item{\code{table_name_fully_specified}}{Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]).}
 
-\item{\code{table_name_fully_specified_with_dbi_id}}{Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]) using DBI::Id.}
+\item{\code{table_name_fully_specified_text}}{Fully specified name of the table in the database (e.g. \[db\].\[dbo\].\[table_name\]) as a text string.}
 
 \item{\code{field_types}}{The types of each column in the database table (INTEGER, DOUBLE, TEXT, BOOLEAN, DATE, DATETIME).}
 
