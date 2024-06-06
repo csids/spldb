@@ -301,7 +301,8 @@ load_data_infile.default <- function(
 
   system2(
     "psql",
-    args = args
+    args = args,
+    stdout = FALSE
   )
 
   b <- Sys.time()
@@ -586,7 +587,7 @@ create_table.default <- function(connection, table, fields, keys = NULL) {
     stringr::str_replace("\\\\", "\\") |>
     stringr::str_replace("\"", "") |>
     stringr::str_replace("\"", "")
-  print(sql)
+  # print(sql)
   DBI::dbExecute(connection, sql)
 }
 
