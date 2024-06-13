@@ -183,6 +183,7 @@ validator_field_contents_csfmt_rts_data_v2 <- function(data) {
         "isoyear",
         "isoyearweek",
         "isoyearquarter",
+        "season",
         "^event",
         "total"
       )
