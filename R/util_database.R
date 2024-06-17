@@ -1,7 +1,8 @@
 random_uuid <- function() {
   x <- uuid::UUIDgenerate(F)
   x <- gsub("-", "", x)
-  x <- paste0("a", x)
+  # the second part here allows for the usage of set.seed()
+  x <- paste0("a", x, round(runif(1)*10000000))
   x
 }
 
