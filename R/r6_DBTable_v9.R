@@ -505,7 +505,7 @@ DBTable_v9 <- R6::R6Class(
       # this will make the insert go faster, because
       # the data will be sorted
       # setkeyv(newdata, self$keys)
-      infile <- random_file(private$load_folder_fn())
+      infile <- random_file(private$load_folder_fn(), extra_insert = digest::digest(newdata[1,]))
       load_data_infile(
         connection = self$dbconnection$autoconnection,
         dbconfig = self$dbconnection$config,
@@ -555,7 +555,7 @@ DBTable_v9 <- R6::R6Class(
       # this will make the insert go faster, because
       # the data will be sorted
 
-      infile <- random_file(private$load_folder_fn())
+      infile <- random_file(private$load_folder_fn(), extra_insert = digest::digest(newdata[1,]))
       upsert_load_data_infile(
         connection = self$dbconnection$autoconnection,
         dbconfig = self$dbconnection$config,

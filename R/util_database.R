@@ -6,9 +6,9 @@ random_uuid <- function() {
   x
 }
 
-random_file <- function(folder, extension = ".csv") {
+random_file <- function(folder, extension = ".csv", extra_insert = NULL) {
   dir.create(folder, showWarnings = FALSE, recursive = TRUE)
-  fs::path(folder, paste0(random_uuid(), extension))
+  fs::path(folder, paste0(random_uuid(), extra_insert, extension))
 }
 
 
